@@ -52,7 +52,7 @@ export default function AdminPanel() {
       // Show success message
       toast({
         title: "Employee created",
-        description: "New employee has been created successfully",
+        description: `${formData.name} has been added to the system.`,
       })
 
       // Reset form
@@ -65,30 +65,32 @@ export default function AdminPanel() {
       })
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
+      // Show error message
       toast({
+        title: "Error",
+        description: "There was a problem creating the employee.",
         variant: "destructive",
-        title: "Creation failed",
-        description: "Please try again later",
       })
     } finally {
       setIsSubmitting(false)
     }
   }
 
-  // Filter employees based on search
+  // Filter employees by search query
   const filteredEmployees = mockEmployees.filter(
-    (emp) =>
-      emp.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      emp.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      emp.department.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      emp.role.toLowerCase().includes(searchQuery.toLowerCase()),
+    (employee) =>
+      employee.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      employee.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      employee.department.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
-  // Get managers for dropdown
-  const managers = mockEmployees.filter((emp) => emp.role === "Manager").map((manager) => manager.name)
+  // List of managers for the select dropdown
+  const managers = mockEmployees
+    .filter((employee) => employee.role === "Manager")
+    .map((manager) => manager.name)
 
   return (
-    <AppShell userRole="admin">
+    <AppShell>
       <div className="flex flex-col gap-6">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Admin Panel</h1>
@@ -112,71 +114,70 @@ export default function AdminPanel() {
               />
               <Button type="submit" size="icon" className="h-9 w-9">
                 <Search className="h-4 w-4" />
-                <span className="sr-only">Search</span>
               </Button>
             </div>
 
             <Card>
               <CardHeader>
-                <CardTitle>Employees</CardTitle>
-                <CardDescription>Manage existing employees in the organization</CardDescription>
+                <CardTitle>All Employees</CardTitle>
+                <CardDescription>Manage all employees in the system.</CardDescription>
               </CardHeader>
-              <CardContent>
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>ID</TableHead>
-                      <TableHead>Name</TableHead>
-                      <TableHead>Email</TableHead>
-                      <TableHead>Department</TableHead>
-                      <TableHead>Role</TableHead>
-                      <TableHead>Manager</TableHead>
-                      <TableHead>Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {filteredEmployees.length > 0 ? (
-                      filteredEmployees.map((employee) => (
+              <CardContent className="p-0">
+                <div className="overflow-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Name</TableHead>
+                        <TableHead>Email</TableHead>
+                        <TableHead>Department</TableHead>
+                        <TableHead>Role</TableHead>
+                        <TableHead>Manager</TableHead>
+                        <TableHead className="w-[60px]">Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {filteredEmployees.map((employee) => (
                         <TableRow key={employee.id}>
-                          <TableCell className="font-medium">{employee.id}</TableCell>
-                          <TableCell>{employee.name}</TableCell>
+                          <TableCell className="font-medium">{employee.name}</TableCell>
                           <TableCell>{employee.email}</TableCell>
                           <TableCell>{employee.department}</TableCell>
                           <TableCell>{employee.role}</TableCell>
-                          <TableCell>{employee.manager || "—"}</TableCell>
+                          <TableCell>{employee.manager || "N/A"}</TableCell>
                           <TableCell>
-                            <Button size="sm" variant="ghost">
+                            <Button size="icon" variant="ghost">
                               <Pencil className="h-4 w-4" />
                               <span className="sr-only">Edit</span>
                             </Button>
                           </TableCell>
                         </TableRow>
-                      ))
-                    ) : (
-                      <TableRow>
-                        <TableCell colSpan={7} className="text-center">
-                          No employees found
-                        </TableCell>
-                      </TableRow>
-                    )}
-                  </TableBody>
-                </Table>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>
 
           <TabsContent value="create" className="mt-6">
             <Card>
-              <CardHeader>
-                <CardTitle>Create New Employee</CardTitle>
-                <CardDescription>Add a new employee to the system</CardDescription>
-              </CardHeader>
               <form onSubmit={handleCreateEmployee}>
-                <CardContent className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <CardHeader>
+                  <CardTitle>Create Employee</CardTitle>
+                  <CardDescription>Add a new employee to the system.</CardDescription>
+                </CardHeader>
+
+                <CardContent className="space-y-6">
+                  <div className="grid gap-6 md:grid-cols-2">
                     <div className="space-y-2">
                       <Label htmlFor="name">Full Name</Label>
-                      <Input id="name" name="name" value={formData.name} onChange={handleChange} required />
+                      <Input
+                        id="name"
+                        name="name"
+                        placeholder="John Doe"
+                        value={formData.name}
+                        onChange={handleChange}
+                        required
+                      />
                     </div>
 
                     <div className="space-y-2">
@@ -185,6 +186,7 @@ export default function AdminPanel() {
                         id="email"
                         name="email"
                         type="email"
+                        placeholder="john.doe@example.com"
                         value={formData.email}
                         onChange={handleChange}
                         required

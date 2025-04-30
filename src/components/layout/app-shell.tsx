@@ -1,23 +1,8 @@
 "use client";
 
-import type React from "react";
-
-import { useState } from "react";
-import {
-  Bell,
-  Home,
-  LogOut,
-  Menu,
-  Plus,
-  Settings,
-  User,
-  FileText,
-  Users,
-  CreditCard,
-} from "lucide-react";
+import React, { ReactNode, useState } from "react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -26,63 +11,92 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {Link} from "react-router-dom";
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Bell,
+  Home,
+  LogOut,
+  Menu,
+  PlusCircle,
+  Settings,
+  User,
+  Users,
+  FileText,
+  CreditCard,
+  Layout,
+} from "lucide-react";
+import { useUser } from "@/context/UserContext";
+import { useNavigate } from "react-router-dom";
 
-interface NavigationItem {
-  name: string;
-  href: string;
-  icon: React.ElementType;
-  roles: string[];
-}
-
-const navigation: NavigationItem[] = [
+// Define the navigation items
+const navigation = [
   {
     name: "Dashboard",
     href: "/dashboard",
     icon: Home,
-    roles: ["employee", "manager", "finance", "admin"],
+    roles: ["employee", "manager", "finance"],
   },
   {
     name: "New Request",
     href: "/new-request",
-    icon: Plus,
-    roles: ["employee", "admin"],
+    icon: PlusCircle,
+    roles: ["employee"],
   },
+  // {
+  //   name: "My Requests",
+  //   href: "/dashboard",
+  //   icon: FileText,
+  //   roles: ["employee"],
+  // },
   {
-    name: "Pending Reviews",
+    name: "Pending Approvals",
     href: "/manager",
     icon: FileText,
-    roles: ["manager", "admin"],
+    roles: ["manager"],
   },
   {
-    name: "Finance Review",
+    name: "Financial Overview",
     href: "/finance",
     icon: CreditCard,
-    roles: ["finance", "admin"],
+    roles: ["finance"],
   },
-  { name: "Admin Panel", href: "/admin", icon: Users, roles: ["admin"] },
   {
-    name: "Settings",
-    href: "/settings",
-    icon: Settings,
-    roles: ["employee", "manager", "finance", "admin"],
+    name: "Admin Panel",
+    href: "/admin",
+    icon: Layout,
+    roles: ["admin"],
+  },
+  {
+    name: "User Management",
+    href: "/admin",
+    icon: Users,
+    roles: ["admin"],
   },
 ];
 
 export default function AppShell({
   children,
-  // userRole = "employee", // Default to employee role
-  userRole = "admin", // Show admin role by default for testing
 }: {
-  children: React.ReactNode;
-  userRole?: "employee" | "manager" | "finance" | "admin";
+  children: ReactNode;
 }) {
+  const { userRole, userName, setIsAuthenticated } = useUser();
   const [notifications] = useState(3); // Example notification count
+  const navigate = useNavigate();
 
   // Filter navigation items based on user role
   const filteredNavigation = navigation.filter((item) =>
     item.roles.includes(userRole),
   );
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    navigate('/');
+  };
 
   return (
     <div className="flex h-screen bg-gray-100">
@@ -121,10 +135,10 @@ export default function AppShell({
               <div className="flex items-center gap-3">
                 <Avatar>
                   <AvatarImage src="/placeholder.svg" alt="User" />
-                  <AvatarFallback>JD</AvatarFallback>
+                  <AvatarFallback>{userName.charAt(0).toUpperCase()}</AvatarFallback>
                 </Avatar>
                 <div>
-                  <p className="text-sm font-medium">John Doe</p>
+                  <p className="text-sm font-medium">{userName}</p>
                   <p className="text-xs text-gray-500 capitalize">{userRole}</p>
                 </div>
               </div>
@@ -157,10 +171,10 @@ export default function AppShell({
             <div className="flex items-center gap-3">
               <Avatar>
                 <AvatarImage src="/placeholder.svg" alt="User" />
-                <AvatarFallback>JD</AvatarFallback>
+                <AvatarFallback>{userName.charAt(0).toUpperCase()}</AvatarFallback>
               </Avatar>
               <div>
-                <p className="text-sm font-medium">John Doe</p>
+                <p className="text-sm font-medium">{userName}</p>
                 <p className="text-xs text-gray-500 capitalize">{userRole}</p>
               </div>
             </div>
@@ -187,7 +201,7 @@ export default function AppShell({
                 <Button variant="ghost" size="icon" className="rounded-full">
                   <Avatar className="h-8 w-8">
                     <AvatarImage src="/placeholder.svg" alt="User" />
-                    <AvatarFallback>JD</AvatarFallback>
+                    <AvatarFallback>{userName.charAt(0).toUpperCase()}</AvatarFallback>
                   </Avatar>
                 </Button>
               </DropdownMenuTrigger>
@@ -203,7 +217,7 @@ export default function AppShell({
                   Settings
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>
+                <DropdownMenuItem onClick={handleLogout}>
                   <LogOut className="mr-2 h-4 w-4" />
                   Log out
                 </DropdownMenuItem>

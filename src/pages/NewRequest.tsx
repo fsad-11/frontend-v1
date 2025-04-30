@@ -27,12 +27,20 @@ export default function NewRequest() {
     amount: "",
     description: "",
     managerName: "",
+    billDocument: null as File | null, // Add field for file upload
   })
 
   // Handle form field changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
     setFormData((prev) => ({ ...prev, [name]: value }))
+  }
+
+  // Handle file upload
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setFormData((prev) => ({ ...prev, billDocument: e.target.files![0] }))
+    }
   }
 
   // Handle select changes
@@ -154,6 +162,20 @@ export default function NewRequest() {
                   required
                   rows={4}
                 />
+              </div>
+
+              <div className="grid w-full max-w-sm items-center gap-1.5">
+                <Label htmlFor="billDocument">Upload Bill Document (PDF)</Label>
+                <Input
+                  id="billDocument"
+                  name="billDocument"
+                  type="file"
+                  accept=".pdf"
+                  onChange={handleFileChange}
+                  className="cursor-pointer"
+                  placeholder="Upload your bill or receipt"
+                />
+                <p className="text-sm text-muted-foreground mt-1">Please upload a PDF file of your bill or receipt</p>
               </div>
 
               <div className="space-y-2">

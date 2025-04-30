@@ -1,20 +1,23 @@
-"use client";
+"use client"
 
-import type React from "react";
-
-import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/components/hooks/use-toast";
+import { useUser } from "@/context/UserContext";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { setUserRole, setIsAuthenticated, setUserName } = useUser();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,14 +28,23 @@ export default function Login() {
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
+      // Set user name from email (in a real app, you'd get this from the backend)
+      const name = email.split('@')[0];
+      setUserName(name);
+      setIsAuthenticated(true);
+
       // Mock authentication logic
       if (email.includes("admin")) {
+        setUserRole("admin");
         navigate("/admin");
       } else if (email.includes("finance")) {
+        setUserRole("finance");
         navigate("/finance");
       } else if (email.includes("manager")) {
+        setUserRole("manager");
         navigate("/manager");
       } else {
+        setUserRole("employee");
         navigate("/dashboard");
       }
 
@@ -41,10 +53,11 @@ export default function Login() {
         description: "Welcome to the Bill Submission System",
       });
     } catch (error) {
+      console.error("Login error:", error);
       toast({
-        variant: "destructive",
         title: "Login failed",
         description: "Please check your credentials and try again",
+        variant: "destructive",
       });
     } finally {
       setIsLoading(false);
@@ -52,73 +65,61 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md">
-        <div className="text-center">
-          <div className="flex justify-center">
-            <image
-              src="/placeholder.svg?height=80&width=80"
-              alt="Organization Logo"
-              width={80}
-              height={80}
-              className="mb-4"
-            />
-          </div>
-          <h1 className="text-2xl font-bold text-black">
-            Bill Submission System
-          </h1>
-          <p className="text-gray-500">Sign in to your account</p>
-        </div>
-
-        <form onSubmit={handleLogin} className="space-y-6">
-          <div className="space-y-2">
-            <Label htmlFor="email" className="text-gray-800">
-              Email
-            </Label>
-            <Input
-              id="email"
-              type="email"
-              className="bg-gray-50 text-gray-900"
-              placeholder="name@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
-
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <Label htmlFor="password" className="text-gray-600">
-                Password
-              </Label>
-              {/* <a href="#" className="text-sm text-blue-600 hover:underline" >
-                Forgot password?
-              </a> */}
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <Card className="w-full max-w-md">
+        <CardHeader>
+          <CardTitle className="text-center text-2xl">Bill Submission System</CardTitle>
+          <CardDescription className="text-center">Enter your credentials to access your account</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="email@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
             </div>
-            <Input
-              id="password"
-              type="password"
-              className="bg-gray-50 text-gray-900"
-              placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
-
-          <Button
-            type="submit"
-            className="w-full bg-gray-900 text-white hover:bg-gray-700"
+            <div className="space-y-2">
+              <Label htmlFor="password">Password</Label>
+              <div className="relative">
+                <Input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="absolute right-0 top-0 h-full px-3"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  <span className="sr-only">{showPassword ? "Hide password" : "Show password"}</span>
+                </Button>
+              </div>
+            </div>
+          </form>
+        </CardContent>
+        <CardFooter>
+          <Button 
+            className="w-full" 
+            onClick={handleLogin} 
             disabled={isLoading}
           >
-            {isLoading ? "Signing in..." : "Sign in"}
+            {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            {isLoading ? "Signing in..." : "Sign In"}
           </Button>
-        </form>
-
-        <div className="text-center text-sm text-gray-500 mt-4">
-          <p>© 2025 Your Organization. All rights reserved.</p>
-        </div>
-      </div>
+        </CardFooter>
+      </Card>
     </div>
   );
 }
