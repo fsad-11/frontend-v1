@@ -26,7 +26,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { cn } from "@/lib/utils";
+import {Link} from "react-router-dom";
 
 interface NavigationItem {
   name: string;
@@ -106,15 +106,14 @@ export default function AppShell({
             <nav className="flex-1 overflow-auto py-4">
               <ul className="space-y-1 px-2">
                 {filteredNavigation.map((item) => (
+                 <Link to={item.href} key={item.name}>
                   <Button
                     variant={"ghost"}
-                    className={cn(
-                      "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium",
-                    )}
+                    className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium"
                   >
                     <item.icon className="h-5 w-5" />
                     {item.name}
-                  </Button>
+                  </Button></Link>
                 ))}
               </ul>
             </nav>
@@ -143,15 +142,14 @@ export default function AppShell({
           <nav className="flex-1 overflow-auto py-4">
             <ul className="space-y-1 px-2">
               {filteredNavigation.map((item) => (
-                <Button
-                  variant={"ghost"}
-                  className={cn(
-                    "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium",
-                  )}
-                >
-                  <item.icon className="h-5 w-5" />
-                  {item.name}
-                </Button>
+                 <Link to={item.href} key={item.name}>
+                 <Button
+                   variant={"ghost"}
+                   className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium"
+                 >
+                   <item.icon className="h-5 w-5" />
+                   {item.name}
+                 </Button></Link>
               ))}
             </ul>
           </nav>

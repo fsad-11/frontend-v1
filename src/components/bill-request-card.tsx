@@ -57,15 +57,7 @@ export default function BillRequestCard({
             <div className="font-medium">Bill #{request.id}</div>
             <Badge
               variant={
-                getBadgeVariant(request.status) as
-                  | "outline"
-                  | "success"
-                  | "destructive"
-                  | "default"
-                  | "secondary"
-                  | null
-                  | undefined
-              }
+                getBadgeVariant(request.status)}
             >
               {request.status.charAt(0).toUpperCase() + request.status.slice(1)}
             </Badge>
