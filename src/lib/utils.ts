@@ -25,6 +25,7 @@ export const mockBillRequests = [
     managerName: "Sarah Johnson",
     description: "Flight tickets for client meeting in Boston",
     department: "Sales",
+    documentUrl: "https://pdfobject.com/pdf/sample.pdf"
   },
   {
     id: "BIL-1002",
@@ -35,6 +36,7 @@ export const mockBillRequests = [
     managerName: "Sarah Johnson",
     description: "Printer toner and paper supplies",
     department: "Marketing",
+    documentUrl: null
   },
   {
     id: "BIL-1003",
@@ -45,6 +47,7 @@ export const mockBillRequests = [
     managerName: "Michael Chen",
     description: "Client lunch meeting at Downtown Cafe",
     department: "Sales",
+    documentUrl: "https://pdfobject.com/pdf/sample.pdf"
   },
   {
     id: "BIL-1004",
@@ -55,6 +58,7 @@ export const mockBillRequests = [
     managerName: "Sarah Johnson",
     description: "Annual license for design software",
     department: "Engineering",
+    documentUrl: "https://pdfobject.com/pdf/sample.pdf"
   },
   {
     id: "BIL-1005",
@@ -65,6 +69,7 @@ export const mockBillRequests = [
     managerName: "Michael Chen",
     description: "Registration for industry conference",
     department: "Product",
+    documentUrl: "https://pdfobject.com/pdf/sample.pdf"
   },
   {
     id: "BIL-1006",
@@ -75,6 +80,7 @@ export const mockBillRequests = [
     managerName: "Sarah Johnson",
     description: "Repair for office printer",
     department: "Operations",
+    documentUrl: "https://pdfobject.com/pdf/sample.pdf"
   },
 ] as const;
 

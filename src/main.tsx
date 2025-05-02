@@ -11,6 +11,8 @@ import Manager from "./pages/Manager";
 import ManagerReview from "./pages/ManagerReview";
 import { UserProvider } from "./context/UserContext";
 import FinanceManager from "./pages/FinanceManager";
+import PrivateRoute from "./components/auth/PrivateRoute";
+import NotFound from "./pages/NotFound";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -18,15 +20,61 @@ createRoot(document.getElementById("root")!).render(
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<LoginPage />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/new-request" element={<NewRequest />} />
-          <Route path="/admin" element={<AdminPanel />} />
-          <Route path="/manager" element={<Manager />} />
-          <Route path="/finance" element={<FinanceManager />} />
-          <Route path="/request/:id" element={<RequestDetails />} />
-          <Route path="/manager/review/:id" element={<ManagerReview />} />
+          
+          {/* Protected routes with role-based access */}
+          <Route path="/dashboard" element={
+            <PrivateRoute 
+              element={<Dashboard />} 
+              allowedRoles={["employee", "manager", "finance"]} 
+            />
+          } />
+          
+          <Route path="/new-request" element={
+            <PrivateRoute 
+              element={<NewRequest />} 
+              allowedRoles={["employee", "manager"]} 
+            />
+          } />
+          
+          <Route path="/admin" element={
+            <PrivateRoute 
+              element={<AdminPanel />} 
+              allowedRoles={["admin"]} 
+            />
+          } />
+          
+          <Route path="/manager" element={
+            <PrivateRoute 
+              element={<Manager />} 
+              allowedRoles={["manager"]} 
+            />
+          } />
+          
+          <Route path="/finance" element={
+            <PrivateRoute 
+              element={<FinanceManager />} 
+              allowedRoles={["finance"]} 
+            />
+          } />
+          
+          <Route path="/request/:id" element={
+            <PrivateRoute 
+              element={<RequestDetails />} 
+              allowedRoles={["employee", "manager", "finance"]} 
+            />
+          } />
+          
+          <Route path="/manager/review/:id" element={
+            <PrivateRoute 
+              element={<ManagerReview />} 
+              allowedRoles={["manager"]} 
+            />
+          } />
+          
+          {/* 404 page - this will catch all undefined routes */}
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
     </UserProvider>
-  </StrictMode>,
+  </StrictMode>
 );

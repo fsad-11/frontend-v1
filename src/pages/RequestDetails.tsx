@@ -9,6 +9,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { ArrowLeft } from "lucide-react"
 import { useToast } from "@/components/hooks/use-toast"
 import { useParams, useNavigate } from "react-router-dom"
+import { PDFViewer } from "@/components/ui/pdf-viewer"
 
 export default function RequestDetails() {
     const { id } = useParams()
@@ -104,6 +105,17 @@ export default function RequestDetails() {
                                 <dd className="text-sm mt-1">{request.description}</dd>
                             </div>
                         </dl>
+                        
+                        {/* Document PDF Viewer */}
+                        {request.documentUrl && (
+                            <div className="mt-8">
+                                <h3 className="text-md font-medium mb-3">Supporting Document</h3>
+                                <PDFViewer 
+                                    url={request.documentUrl} 
+                                    title={`Request #${request.id} Document`} 
+                                />
+                            </div>
+                        )}
                     </CardContent>
 
                     <CardFooter className="flex justify-between border-t pt-6">
