@@ -14,11 +14,14 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { departments, mockEmployees } from "@/lib/utils"
 import { Search, Pencil } from "lucide-react"
 import { useToast } from "@/components/hooks/use-toast"
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 
 export default function AdminPanel() {
   const { toast } = useToast()
   const [searchQuery, setSearchQuery] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
+  const [editingEmployeeId, setEditingEmployeeId] = useState<string | null>(null)
 
   // Form state
   const [formData, setFormData] = useState({
@@ -38,6 +41,53 @@ export default function AdminPanel() {
   // Handle select changes
   const handleSelectChange = (name: string, value: string) => {
     setFormData((prev) => ({ ...prev, [name]: value }))
+  }
+
+  // Open edit dialog and set form data
+  const handleEditEmployee = (employeeId: string) => {
+    const employee = mockEmployees.find(emp => emp.id === employeeId)
+    if (employee) {
+      setFormData({
+        name: employee.name,
+        email: employee.email,
+        department: employee.department,
+        role: employee.role,
+        manager: employee.manager || "",
+      })
+      setEditingEmployeeId(employeeId)
+      setIsEditDialogOpen(true)
+    }
+  }
+
+  // Handle edit form submission
+  const handleUpdateEmployee = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsSubmitting(true)
+
+    try {
+      // Mock API call delay
+      await new Promise((resolve) => setTimeout(resolve, 1000))
+
+      // Show success message
+      toast({
+        title: "Employee updated",
+        description: `${formData.name}'s information has been updated.`,
+      })
+
+      // Close dialog
+      setIsEditDialogOpen(false)
+      setEditingEmployeeId(null)
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error) {
+      // Show error message
+      toast({
+        title: "Error",
+        description: "There was a problem updating the employee.",
+        variant: "destructive",
+      })
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   // Handle form submission
@@ -144,7 +194,7 @@ export default function AdminPanel() {
                           <TableCell>{employee.role}</TableCell>
                           <TableCell>{employee.manager || "N/A"}</TableCell>
                           <TableCell>
-                            <Button size="icon" variant="ghost">
+                            <Button size="icon" variant="ghost" onClick={() => handleEditEmployee(employee.id)}>
                               <Pencil className="h-4 w-4" />
                               <span className="sr-only">Edit</span>
                             </Button>
@@ -286,6 +336,112 @@ export default function AdminPanel() {
             </Card>
           </TabsContent>
         </Tabs>
+
+        {/* Edit Employee Dialog */}
+        <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+          <DialogContent className="sm:max-w-[600px]">
+            <form onSubmit={handleUpdateEmployee}>
+              <DialogHeader>
+                <DialogTitle>Edit Employee</DialogTitle>
+                <DialogDescription>
+                  Update employee information. Click save when you're done.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="grid gap-6 py-4 md:grid-cols-2">
+                <div className="space-y-2">
+                  <Label htmlFor="edit-name">Full Name</Label>
+                  <Input
+                    id="edit-name"
+                    name="name"
+                    placeholder="John Doe"
+                    value={formData.name}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="edit-email">Email</Label>
+                  <Input
+                    id="edit-email"
+                    name="email"
+                    type="email"
+                    placeholder="john.doe@example.com"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="edit-department">Department</Label>
+                  <Select
+                    value={formData.department}
+                    onValueChange={(value) => handleSelectChange("department", value)}
+                    required
+                  >
+                    <SelectTrigger id="edit-department">
+                      <SelectValue placeholder="Select department" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {departments.map((dept) => (
+                        <SelectItem key={dept} value={dept}>
+                          {dept}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="edit-role">Role</Label>
+                  <Select
+                    value={formData.role}
+                    onValueChange={(value) => handleSelectChange("role", value)}
+                    required
+                  >
+                    <SelectTrigger id="edit-role">
+                      <SelectValue placeholder="Select role" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Employee">Employee</SelectItem>
+                      <SelectItem value="Manager">Manager</SelectItem>
+                      <SelectItem value="Finance Manager">Finance Manager</SelectItem>
+                      <SelectItem value="Admin">Admin</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="edit-manager">Assign Manager</Label>
+                  <Select 
+                    value={formData.manager} 
+                    onValueChange={(value) => handleSelectChange("manager", value)}
+                  >
+                    <SelectTrigger id="edit-manager">
+                      <SelectValue placeholder="Select manager (if applicable)" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {managers.map((manager) => (
+                        <SelectItem key={manager} value={manager}>
+                          {manager}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              <DialogFooter>
+                <Button type="button" variant="outline" onClick={() => setIsEditDialogOpen(false)}>
+                  Cancel
+                </Button>
+                <Button type="submit" disabled={isSubmitting}>
+                  {isSubmitting ? "Saving..." : "Save Changes"}
+                </Button>
+              </DialogFooter>
+            </form>
+          </DialogContent>
+        </Dialog>
       </div>
     </AppShell>
   )
