@@ -1,6 +1,6 @@
 "use client";
 
-import React, { ReactNode, useState } from "react";
+import { ReactNode, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,11 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Bell,
@@ -39,7 +35,7 @@ const navigation = [
     name: "Dashboard",
     href: "/dashboard",
     icon: Home,
-    roles: ["employee", "manager", "finance"],
+    roles: ["employee", "manager", "finance", "admin"],
   },
   {
     name: "New Request",
@@ -79,23 +75,22 @@ const navigation = [
   },
 ];
 
-export default function AppShell({
-  children,
-}: {
-  children: ReactNode;
-}) {
-  const { userRole, userName, setIsAuthenticated } = useUser();
+export default function AppShell({ children }: { children: ReactNode }) {
+  const { user, userRole, logout } = useUser();
   const [notifications] = useState(3); // Example notification count
   const navigate = useNavigate();
 
+  // Get the user's name
+  const userName = user?.username || "";
+
   // Filter navigation items based on user role
-  const filteredNavigation = navigation.filter((item) =>
-    item.roles.includes(userRole),
+  const filteredNavigation = navigation.filter(
+    (item) => userRole && item.roles.includes(userRole)
   );
 
   const handleLogout = () => {
-    setIsAuthenticated(false);
-    navigate('/');
+    logout();
+    navigate("/");
   };
 
   return (
@@ -120,14 +115,15 @@ export default function AppShell({
             <nav className="flex-1 overflow-auto py-4">
               <ul className="space-y-1 px-2">
                 {filteredNavigation.map((item) => (
-                 <Link to={item.href} key={item.name}>
-                  <Button
-                    variant={"ghost"}
-                    className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium"
-                  >
-                    <item.icon className="h-5 w-5" />
-                    {item.name}
-                  </Button></Link>
+                  <Link to={item.href} key={item.name}>
+                    <Button
+                      variant={"ghost"}
+                      className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium"
+                    >
+                      <item.icon className="h-5 w-5" />
+                      {item.name}
+                    </Button>
+                  </Link>
                 ))}
               </ul>
             </nav>
@@ -135,11 +131,15 @@ export default function AppShell({
               <div className="flex items-center gap-3">
                 <Avatar>
                   <AvatarImage src="/placeholder.svg" alt="User" />
-                  <AvatarFallback>{userName.charAt(0).toUpperCase()}</AvatarFallback>
+                  <AvatarFallback>
+                    {(userName && userName.charAt(0).toUpperCase()) || "U"}
+                  </AvatarFallback>
                 </Avatar>
                 <div>
-                  <p className="text-sm font-medium">{userName}</p>
-                  <p className="text-xs text-gray-500 capitalize">{userRole}</p>
+                  <p className="text-sm font-medium">{userName || "User"}</p>
+                  <p className="text-xs text-gray-500 capitalize">
+                    {userRole || "guest"}
+                  </p>
                 </div>
               </div>
             </div>
@@ -156,14 +156,15 @@ export default function AppShell({
           <nav className="flex-1 overflow-auto py-4">
             <ul className="space-y-1 px-2">
               {filteredNavigation.map((item) => (
-                 <Link to={item.href} key={item.name}>
-                 <Button
-                   variant={"ghost"}
-                   className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium"
-                 >
-                   <item.icon className="h-5 w-5" />
-                   {item.name}
-                 </Button></Link>
+                <Link to={item.href} key={item.name}>
+                  <Button
+                    variant={"ghost"}
+                    className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium"
+                  >
+                    <item.icon className="h-5 w-5" />
+                    {item.name}
+                  </Button>
+                </Link>
               ))}
             </ul>
           </nav>
@@ -171,11 +172,15 @@ export default function AppShell({
             <div className="flex items-center gap-3">
               <Avatar>
                 <AvatarImage src="/placeholder.svg" alt="User" />
-                <AvatarFallback>{userName.charAt(0).toUpperCase()}</AvatarFallback>
+                <AvatarFallback>
+                  {(userName && userName.charAt(0).toUpperCase()) || "U"}
+                </AvatarFallback>
               </Avatar>
               <div>
-                <p className="text-sm font-medium">{userName}</p>
-                <p className="text-xs text-gray-500 capitalize">{userRole}</p>
+                <p className="text-sm font-medium">{userName || "User"}</p>
+                <p className="text-xs text-gray-500 capitalize">
+                  {userRole || "guest"}
+                </p>
               </div>
             </div>
           </div>
@@ -201,7 +206,9 @@ export default function AppShell({
                 <Button variant="ghost" size="icon" className="rounded-full">
                   <Avatar className="h-8 w-8">
                     <AvatarImage src="/placeholder.svg" alt="User" />
-                    <AvatarFallback>{userName.charAt(0).toUpperCase()}</AvatarFallback>
+                    <AvatarFallback>
+                      {(userName && userName.charAt(0).toUpperCase()) || "U"}
+                    </AvatarFallback>
                   </Avatar>
                 </Button>
               </DropdownMenuTrigger>

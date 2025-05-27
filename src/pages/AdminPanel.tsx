@@ -1,27 +1,57 @@
-"use client"
+"use client";
 
-import type React from "react"
-
-import { useState } from "react"
-import AppShell from "@/components/layout/app-shell"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { departments, mockEmployees } from "@/lib/utils"
-import { Search, Pencil } from "lucide-react"
-import { useToast } from "@/components/hooks/use-toast"
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { useState, useEffect } from "react";
+import AppShell from "@/components/layout/app-shell";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { departments } from "@/lib/utils";
+import { Search, Pencil, Loader2, AlertCircle } from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import userService from "@/services/user-service";
+import useApi from "@/hooks/use-api";
 
 export default function AdminPanel() {
-  const { toast } = useToast()
-  const [searchQuery, setSearchQuery] = useState("")
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
-  const [editingEmployeeId, setEditingEmployeeId] = useState<string | null>(null)
+  const { toast } = useToast();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [editingEmployeeId, setEditingEmployeeId] = useState<number | null>(
+    null
+  );
 
   // Form state
   const [formData, setFormData] = useState({
@@ -30,80 +60,136 @@ export default function AdminPanel() {
     department: "",
     role: "",
     manager: "",
-  })
+  });
+
+  // Fetch users with useApi hook
+  const {
+    data: users,
+    isLoading,
+    error,
+    execute: fetchUsers,
+  } = useApi(userService.getAllUsers);
+
+  // Get managers from user list
+  const managers = users
+    ? users
+        .filter((user) => user.roles.includes("ROLE_MANAGER"))
+        .map((manager) => ({
+          id: manager.id,
+          name: `${manager.firstName || ""} ${manager.lastName || ""}`.trim(),
+        }))
+    : [];
+
+  // Fetch users on component mount
+  useEffect(() => {
+    fetchUsers();
+  }, []);
 
   // Handle form field changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
-  }
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
   // Handle select changes
   const handleSelectChange = (name: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [name]: value }))
-  }
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
   // Open edit dialog and set form data
-  const handleEditEmployee = (employeeId: string) => {
-    const employee = mockEmployees.find(emp => emp.id === employeeId)
+  const handleEditEmployee = (employeeId: number) => {
+    const employee = users?.find((emp) => emp.id === employeeId);
     if (employee) {
       setFormData({
-        name: employee.name,
-        email: employee.email,
-        department: employee.department,
-        role: employee.role,
-        manager: employee.manager || "",
-      })
-      setEditingEmployeeId(employeeId)
-      setIsEditDialogOpen(true)
+        name: `${employee.firstName || ""} ${employee.lastName || ""}`.trim(),
+        email: employee.email || "",
+        department: employee.department || "",
+        role:
+          employee.roles
+            .find((role) => role.startsWith("ROLE_"))
+            ?.replace("ROLE_", "") || "",
+        manager: employee.managerId ? employee.managerId.toString() : "",
+      });
+      setEditingEmployeeId(employeeId);
+      setIsEditDialogOpen(true);
     }
-  }
+  };
 
   // Handle edit form submission
   const handleUpdateEmployee = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSubmitting(true)
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    if (!editingEmployeeId) {
+      toast({
+        title: "Error",
+        description: "Employee ID is missing",
+        variant: "destructive",
+      });
+      setIsSubmitting(false);
+      return;
+    }
 
     try {
-      // Mock API call delay
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      // Parse name into first and last name
+      const nameParts = formData.name.split(" ");
+      const firstName = nameParts[0] || "";
+      const lastName = nameParts.slice(1).join(" ") || "";
+
+      // Prepare role
+      const role = formData.role ? formData.role.toLowerCase() : "";
+
+      await userService.updateUser(editingEmployeeId, {
+        firstName,
+        lastName,
+        email: formData.email,
+        roles: [role],
+        ...(formData.department && { department: formData.department }),
+        ...(formData.manager && { managerId: parseInt(formData.manager) }),
+      });
 
       // Show success message
       toast({
         title: "Employee updated",
         description: `${formData.name}'s information has been updated.`,
-      })
+      });
+
+      // Refresh user list
+      fetchUsers();
 
       // Close dialog
-      setIsEditDialogOpen(false)
-      setEditingEmployeeId(null)
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      setIsEditDialogOpen(false);
+      setEditingEmployeeId(null);
     } catch (error) {
       // Show error message
       toast({
         title: "Error",
-        description: "There was a problem updating the employee.",
+        description:
+          error instanceof Error
+            ? error.message
+            : "There was a problem updating the employee.",
         variant: "destructive",
-      })
+      });
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
-  // Handle form submission
+  // Handle form submission for new employee
   const handleCreateEmployee = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSubmitting(true)
+    e.preventDefault();
+    setIsSubmitting(true);
 
     try {
-      // Mock API call delay
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      // Implementation would depend on the API structure
+      // This is a placeholder for the API call
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       // Show success message
       toast({
         title: "Employee created",
         description: `${formData.name} has been added to the system.`,
-      })
+      });
 
       // Reset form
       setFormData({
@@ -112,39 +198,92 @@ export default function AdminPanel() {
         department: "",
         role: "",
         manager: "",
-      })
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      });
+
+      // Refresh user list
+      fetchUsers();
     } catch (error) {
       // Show error message
       toast({
         title: "Error",
-        description: "There was a problem creating the employee.",
+        description:
+          error instanceof Error
+            ? error.message
+            : "There was a problem creating the employee.",
         variant: "destructive",
-      })
+      });
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
   // Filter employees by search query
-  const filteredEmployees = mockEmployees.filter(
-    (employee) =>
-      employee.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      employee.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      employee.department.toLowerCase().includes(searchQuery.toLowerCase())
-  )
+  const filteredUsers = users
+    ? users.filter(
+        (user) =>
+          `${user.firstName || ""} ${user.lastName || ""}`
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase()) ||
+          (user.email || "")
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase()) ||
+          (user.department || "")
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase())
+      )
+    : [];
 
-  // List of managers for the select dropdown
-  const managers = mockEmployees
-    .filter((employee) => employee.role === "Manager")
-    .map((manager) => manager.name)
+  // Convert role from ROLE_XXX format to display format
+  const formatRole = (role: string) => {
+    if (!role) return "";
+    return (
+      role.replace("ROLE_", "").charAt(0) +
+      role.replace("ROLE_", "").slice(1).toLowerCase()
+    );
+  };
+
+  // Get manager name by ID
+  const getManagerName = (managerId?: number) => {
+    if (!managerId) return "N/A";
+    const manager = users?.find((user) => user.id === managerId);
+    return manager
+      ? `${manager.firstName || ""} ${manager.lastName || ""}`.trim()
+      : "N/A";
+  };
+
+  // Show loading state
+  if (isLoading) {
+    return (
+      <AppShell>
+        <div className="flex items-center justify-center h-64">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      </AppShell>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <AppShell>
+        <Alert variant="destructive" className="mb-6">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>
+            {error.message || "Failed to load user data. Please try again."}
+          </AlertDescription>
+        </Alert>
+      </AppShell>
+    );
+  }
 
   return (
     <AppShell>
       <div className="flex flex-col gap-6">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Admin Panel</h1>
-          <p className="text-muted-foreground">Manage employees and system settings</p>
+          <p className="text-muted-foreground">
+            Manage employees and system settings
+          </p>
         </div>
 
         <Tabs defaultValue="employees">
@@ -170,7 +309,9 @@ export default function AdminPanel() {
             <Card>
               <CardHeader>
                 <CardTitle>All Employees</CardTitle>
-                <CardDescription>Manage all employees in the system.</CardDescription>
+                <CardDescription>
+                  Manage all employees in the system.
+                </CardDescription>
               </CardHeader>
               <CardContent className="p-0">
                 <div className="overflow-auto">
@@ -186,15 +327,25 @@ export default function AdminPanel() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {filteredEmployees.map((employee) => (
-                        <TableRow key={employee.id}>
-                          <TableCell className="font-medium">{employee.name}</TableCell>
-                          <TableCell>{employee.email}</TableCell>
-                          <TableCell>{employee.department}</TableCell>
-                          <TableCell>{employee.role}</TableCell>
-                          <TableCell>{employee.manager || "N/A"}</TableCell>
+                      {filteredUsers.map((user) => (
+                        <TableRow key={user.id}>
+                          <TableCell className="font-medium">{`${user.firstName || ""} ${user.lastName || ""}`}</TableCell>
+                          <TableCell>{user.email || "N/A"}</TableCell>
+                          <TableCell>{user.department || "N/A"}</TableCell>
                           <TableCell>
-                            <Button size="icon" variant="ghost" onClick={() => handleEditEmployee(employee.id)}>
+                            {user.roles
+                              .map((role) => formatRole(role))
+                              .join(", ")}
+                          </TableCell>
+                          <TableCell>
+                            {getManagerName(user.managerId)}
+                          </TableCell>
+                          <TableCell>
+                            <Button
+                              size="icon"
+                              variant="ghost"
+                              onClick={() => handleEditEmployee(user.id)}
+                            >
                               <Pencil className="h-4 w-4" />
                               <span className="sr-only">Edit</span>
                             </Button>
@@ -213,7 +364,9 @@ export default function AdminPanel() {
               <form onSubmit={handleCreateEmployee}>
                 <CardHeader>
                   <CardTitle>Create Employee</CardTitle>
-                  <CardDescription>Add a new employee to the system.</CardDescription>
+                  <CardDescription>
+                    Add a new employee to the system.
+                  </CardDescription>
                 </CardHeader>
 
                 <CardContent className="space-y-6">
@@ -247,7 +400,9 @@ export default function AdminPanel() {
                       <Label htmlFor="department">Department</Label>
                       <Select
                         value={formData.department}
-                        onValueChange={(value) => handleSelectChange("department", value)}
+                        onValueChange={(value) =>
+                          handleSelectChange("department", value)
+                        }
                         required
                       >
                         <SelectTrigger id="department">
@@ -267,7 +422,9 @@ export default function AdminPanel() {
                       <Label htmlFor="role">Role</Label>
                       <Select
                         value={formData.role}
-                        onValueChange={(value) => handleSelectChange("role", value)}
+                        onValueChange={(value) =>
+                          handleSelectChange("role", value)
+                        }
                         required
                       >
                         <SelectTrigger id="role">
@@ -276,7 +433,9 @@ export default function AdminPanel() {
                         <SelectContent>
                           <SelectItem value="Employee">Employee</SelectItem>
                           <SelectItem value="Manager">Manager</SelectItem>
-                          <SelectItem value="Finance Manager">Finance Manager</SelectItem>
+                          <SelectItem value="Finance Manager">
+                            Finance Manager
+                          </SelectItem>
                           <SelectItem value="Admin">Admin</SelectItem>
                         </SelectContent>
                       </Select>
@@ -284,14 +443,22 @@ export default function AdminPanel() {
 
                     <div className="space-y-2">
                       <Label htmlFor="manager">Assign Manager</Label>
-                      <Select value={formData.manager} onValueChange={(value) => handleSelectChange("manager", value)}>
+                      <Select
+                        value={formData.manager}
+                        onValueChange={(value) =>
+                          handleSelectChange("manager", value)
+                        }
+                      >
                         <SelectTrigger id="manager">
                           <SelectValue placeholder="Select manager (if applicable)" />
                         </SelectTrigger>
                         <SelectContent>
                           {managers.map((manager) => (
-                            <SelectItem key={manager} value={manager}>
-                              {manager}
+                            <SelectItem
+                              key={manager.id}
+                              value={manager.id.toString()}
+                            >
+                              {manager.name}
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -328,10 +495,14 @@ export default function AdminPanel() {
             <Card>
               <CardHeader>
                 <CardTitle>System Settings</CardTitle>
-                <CardDescription>Configure global system settings and permissions</CardDescription>
+                <CardDescription>
+                  Configure global system settings and permissions
+                </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <p className="text-muted-foreground text-center py-12">Settings panel would be implemented here</p>
+                <p className="text-muted-foreground text-center py-12">
+                  Settings panel would be implemented here
+                </p>
               </CardContent>
             </Card>
           </TabsContent>
@@ -377,7 +548,9 @@ export default function AdminPanel() {
                   <Label htmlFor="edit-department">Department</Label>
                   <Select
                     value={formData.department}
-                    onValueChange={(value) => handleSelectChange("department", value)}
+                    onValueChange={(value) =>
+                      handleSelectChange("department", value)
+                    }
                     required
                   >
                     <SelectTrigger id="edit-department">
@@ -406,7 +579,9 @@ export default function AdminPanel() {
                     <SelectContent>
                       <SelectItem value="Employee">Employee</SelectItem>
                       <SelectItem value="Manager">Manager</SelectItem>
-                      <SelectItem value="Finance Manager">Finance Manager</SelectItem>
+                      <SelectItem value="Finance Manager">
+                        Finance Manager
+                      </SelectItem>
                       <SelectItem value="Admin">Admin</SelectItem>
                     </SelectContent>
                   </Select>
@@ -414,17 +589,22 @@ export default function AdminPanel() {
 
                 <div className="space-y-2">
                   <Label htmlFor="edit-manager">Assign Manager</Label>
-                  <Select 
-                    value={formData.manager} 
-                    onValueChange={(value) => handleSelectChange("manager", value)}
+                  <Select
+                    value={formData.manager}
+                    onValueChange={(value) =>
+                      handleSelectChange("manager", value)
+                    }
                   >
                     <SelectTrigger id="edit-manager">
                       <SelectValue placeholder="Select manager (if applicable)" />
                     </SelectTrigger>
                     <SelectContent>
                       {managers.map((manager) => (
-                        <SelectItem key={manager} value={manager}>
-                          {manager}
+                        <SelectItem
+                          key={manager.id}
+                          value={manager.id.toString()}
+                        >
+                          {manager.name}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -432,7 +612,11 @@ export default function AdminPanel() {
                 </div>
               </div>
               <DialogFooter>
-                <Button type="button" variant="outline" onClick={() => setIsEditDialogOpen(false)}>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setIsEditDialogOpen(false)}
+                >
                   Cancel
                 </Button>
                 <Button type="submit" disabled={isSubmitting}>
@@ -444,5 +628,5 @@ export default function AdminPanel() {
         </Dialog>
       </div>
     </AppShell>
-  )
+  );
 }

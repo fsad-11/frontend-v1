@@ -1,5 +1,6 @@
 import { Navigate, useLocation } from "react-router-dom";
 import { useUser } from "@/context/UserContext";
+import { Loader2 } from "lucide-react";
 
 interface PrivateRouteProps {
   element: React.ReactNode;
@@ -7,8 +8,17 @@ interface PrivateRouteProps {
 }
 
 const PrivateRoute = ({ element, allowedRoles = [] }: PrivateRouteProps) => {
-  const { isAuthenticated, userRole } = useUser();
+  const { isAuthenticated, isLoading, hasRole } = useUser();
   const location = useLocation();
+
+  // Show loading spinner while authentication state is being checked
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   // Check if the user is authenticated
   if (!isAuthenticated) {
@@ -16,8 +26,15 @@ const PrivateRoute = ({ element, allowedRoles = [] }: PrivateRouteProps) => {
     return <Navigate to="/" state={{ from: location }} replace />;
   }
 
-  // If no specific roles are required or if the user role is in the allowed roles, show the component
-  if (allowedRoles.length === 0 || allowedRoles.includes(userRole)) {
+  // If no specific roles are required, show the component
+  if (allowedRoles.length === 0) {
+    return <>{element}</>;
+  }
+
+  // Check if the user has any of the allowed roles
+  const hasAllowedRole = allowedRoles.some((role) => hasRole(role));
+
+  if (hasAllowedRole) {
     return <>{element}</>;
   }
 

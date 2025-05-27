@@ -1,0 +1,1450 @@
+{
+  "v": 6,
+  "name": "Reimbursement System API",
+  "folders": [
+    {
+      "v": 6,
+      "name": "Authentication",
+      "folders": [],
+      "requests": [
+        {
+          "v": "11",
+          "name": "Register User",
+          "method": "POST",
+          "endpoint": "<<base_url>>/api/auth/register",
+          "params": [],
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json",
+              "active": true,
+              "description": ""
+            }
+          ],
+          "preRequestScript": "",
+          "testScript": "",
+          "auth": {
+            "authType": "inherit",
+            "authActive": true
+          },
+          "body": {
+            "contentType": "application/json",
+            "body": "{\n    \"username\": \"employee1\",\n    \"password\": \"password123\",\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"email\": \"employee1@example.com\",\n    \"roles\": [\"employee\"]\n}"
+          },
+          "requestVariables": [],
+          "responses": {
+            "Register User - 200": {
+              "name": "Register User - 200",
+              "originalRequest": {
+                "v": "3",
+                "name": "Register User",
+                "method": "POST",
+                "endpoint": "<<base_url>>/api/auth/register",
+                "headers": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "active": true,
+                    "description": ""
+                  }
+                ],
+                "params": [],
+                "body": {
+                  "contentType": "application/json",
+                  "body": "{\n    \"username\": \"employee1\",\n    \"password\": \"password123\",\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"email\": \"employee1@example.com\",\n    \"roles\": [\"employee\"]\n}"
+                },
+                "auth": {
+                  "authType": "none",
+                  "authActive": true
+                },
+                "requestVariables": []
+              },
+              "status": "200 OK",
+              "code": 200,
+              "headers": [
+                {
+                  "key": "X-XSS-Protection",
+                  "value": "0"
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 21 May 2025 13:21:03 GMT"
+                },
+                {
+                  "key": "X-Content-Type-Options",
+                  "value": "nosniff"
+                },
+                {
+                  "key": "Pragma",
+                  "value": "no-cache"
+                },
+                {
+                  "key": "Transfer-Encoding",
+                  "value": "chunked"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Cache-Control",
+                  "value": "no-cache, no-store, max-age=0, must-revalidate"
+                },
+                {
+                  "key": "X-Frame-Options",
+                  "value": "DENY"
+                },
+                {
+                  "key": "Expires",
+                  "value": "0"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"message\":\"User registered successfully!\"}"
+            }
+          }
+        },
+        {
+          "v": "11",
+          "name": "Register Manager",
+          "method": "POST",
+          "endpoint": "<<base_url>>/api/auth/register",
+          "params": [],
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json",
+              "active": true,
+              "description": ""
+            }
+          ],
+          "preRequestScript": "",
+          "testScript": "",
+          "auth": {
+            "authType": "inherit",
+            "authActive": true
+          },
+          "body": {
+            "contentType": "application/json",
+            "body": "{\n    \"username\": \"manager1\",\n    \"password\": \"password123\",\n    \"firstName\": \"Jane\",\n    \"lastName\": \"Smith\",\n    \"email\": \"manager1@example.com\",\n    \"roles\": [\"manager\"]\n}"
+          },
+          "requestVariables": [],
+          "responses": {
+            "Register Manager - 200": {
+              "name": "Register Manager - 200",
+              "originalRequest": {
+                "v": "3",
+                "name": "Register Manager",
+                "method": "POST",
+                "endpoint": "<<base_url>>/api/auth/register",
+                "headers": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "active": true,
+                    "description": ""
+                  }
+                ],
+                "params": [],
+                "body": {
+                  "contentType": "application/json",
+                  "body": "{\n    \"username\": \"manager1\",\n    \"password\": \"password123\",\n    \"firstName\": \"Jane\",\n    \"lastName\": \"Smith\",\n    \"email\": \"manager1@example.com\",\n    \"roles\": [\"manager\"]\n}"
+                },
+                "auth": {
+                  "authType": "none",
+                  "authActive": true
+                },
+                "requestVariables": []
+              },
+              "status": "200 OK",
+              "code": 200,
+              "headers": [
+                {
+                  "key": "Cache-Control",
+                  "value": "no-cache, no-store, max-age=0, must-revalidate"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "X-Content-Type-Options",
+                  "value": "nosniff"
+                },
+                {
+                  "key": "X-XSS-Protection",
+                  "value": "0"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Transfer-Encoding",
+                  "value": "chunked"
+                },
+                {
+                  "key": "Pragma",
+                  "value": "no-cache"
+                },
+                {
+                  "key": "Expires",
+                  "value": "0"
+                },
+                {
+                  "key": "X-Frame-Options",
+                  "value": "DENY"
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 21 May 2025 13:34:05 GMT"
+                }
+              ],
+              "body": "{\"message\":\"User registered successfully!\"}"
+            }
+          }
+        },
+        {
+          "v": "11",
+          "name": "Register Finance",
+          "method": "POST",
+          "endpoint": "<<base_url>>/api/auth/register",
+          "params": [],
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json",
+              "active": true,
+              "description": ""
+            }
+          ],
+          "preRequestScript": "",
+          "testScript": "",
+          "auth": {
+            "authType": "inherit",
+            "authActive": true
+          },
+          "body": {
+            "contentType": "application/json",
+            "body": "{\n    \"username\": \"finance1\",\n    \"password\": \"password123\",\n    \"firstName\": \"Robert\",\n    \"lastName\": \"Johnson\",\n    \"email\": \"finance1@example.com\",\n    \"roles\": [\"finance\"]\n}"
+          },
+          "requestVariables": [],
+          "responses": {
+            "Register Finance - 200": {
+              "name": "Register Finance - 200",
+              "originalRequest": {
+                "v": "3",
+                "name": "Register Finance",
+                "method": "POST",
+                "endpoint": "<<base_url>>/api/auth/register",
+                "headers": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "active": true,
+                    "description": ""
+                  }
+                ],
+                "params": [],
+                "body": {
+                  "contentType": "application/json",
+                  "body": "{\n    \"username\": \"finance1\",\n    \"password\": \"password123\",\n    \"firstName\": \"Robert\",\n    \"lastName\": \"Johnson\",\n    \"email\": \"finance1@example.com\",\n    \"roles\": [\"finance\"]\n}"
+                },
+                "auth": {
+                  "authType": "none",
+                  "authActive": true
+                },
+                "requestVariables": []
+              },
+              "status": "200 OK",
+              "code": 200,
+              "headers": [
+                {
+                  "key": "Date",
+                  "value": "Wed, 21 May 2025 13:37:52 GMT"
+                },
+                {
+                  "key": "X-Content-Type-Options",
+                  "value": "nosniff"
+                },
+                {
+                  "key": "Expires",
+                  "value": "0"
+                },
+                {
+                  "key": "Transfer-Encoding",
+                  "value": "chunked"
+                },
+                {
+                  "key": "X-Frame-Options",
+                  "value": "DENY"
+                },
+                {
+                  "key": "X-XSS-Protection",
+                  "value": "0"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Cache-Control",
+                  "value": "no-cache, no-store, max-age=0, must-revalidate"
+                },
+                {
+                  "key": "Pragma",
+                  "value": "no-cache"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"message\":\"User registered successfully!\"}"
+            }
+          }
+        },
+        {
+          "v": "11",
+          "name": "Register Admin",
+          "method": "POST",
+          "endpoint": "<<base_url>>/api/auth/register",
+          "params": [],
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json",
+              "active": true,
+              "description": ""
+            }
+          ],
+          "preRequestScript": "",
+          "testScript": "",
+          "auth": {
+            "authType": "inherit",
+            "authActive": true
+          },
+          "body": {
+            "contentType": "application/json",
+            "body": "{\n    \"username\": \"admin2\",\n    \"password\": \"password123\",\n    \"firstName\": \"Admin\",\n    \"lastName\": \"User\",\n    \"email\": \"admin2@example.com\",\n    \"roles\": [\"admin\"]\n}"
+          },
+          "requestVariables": [],
+          "responses": {}
+        },
+        {
+          "v": "11",
+          "name": "Register Multi-Role User",
+          "method": "POST",
+          "endpoint": "<<base_url>>/api/auth/register",
+          "params": [],
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json",
+              "active": true,
+              "description": ""
+            }
+          ],
+          "preRequestScript": "",
+          "testScript": "",
+          "auth": {
+            "authType": "inherit",
+            "authActive": true
+          },
+          "body": {
+            "contentType": "application/json",
+            "body": "{\n    \"username\": \"multirole\",\n    \"password\": \"password123\",\n    \"firstName\": \"Multi\",\n    \"lastName\": \"Role\",\n    \"email\": \"multirole@example.com\",\n    \"roles\": [\"admin\", \"finance\"]\n}"
+          },
+          "requestVariables": [],
+          "responses": {}
+        },
+        {
+          "v": "11",
+          "name": "Login",
+          "method": "POST",
+          "endpoint": "<<base_url>>/api/auth/login",
+          "params": [],
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json",
+              "active": true,
+              "description": ""
+            }
+          ],
+          "preRequestScript": "",
+          "testScript": "",
+          "auth": {
+            "authType": "inherit",
+            "authActive": true
+          },
+          "body": {
+            "contentType": "application/json",
+            "body": "{\n    \"username\": \"admin2\",\n    \"password\": \"password123\"\n}"
+          },
+          "requestVariables": [],
+          "responses": {}
+        },
+        {
+          "v": "11",
+          "name": "Login (Employee)",
+          "method": "POST",
+          "endpoint": "<<base_url>>/api/auth/login",
+          "params": [],
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json",
+              "active": true,
+              "description": ""
+            }
+          ],
+          "preRequestScript": "",
+          "testScript": "",
+          "auth": {
+            "authType": "inherit",
+            "authActive": true
+          },
+          "body": {
+            "contentType": "application/json",
+            "body": "{\n    \"username\": \"employee1\",\n    \"password\": \"password123\"\n}"
+          },
+          "requestVariables": [],
+          "responses": {}
+        },
+        {
+          "v": "11",
+          "name": "Login (Manager)",
+          "method": "POST",
+          "endpoint": "<<base_url>>/api/auth/login",
+          "params": [],
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json",
+              "active": true,
+              "description": ""
+            }
+          ],
+          "preRequestScript": "",
+          "testScript": "",
+          "auth": {
+            "authType": "inherit",
+            "authActive": true
+          },
+          "body": {
+            "contentType": "application/json",
+            "body": "{\n    \"username\": \"manager1\",\n    \"password\": \"password123\"\n}"
+          },
+          "requestVariables": [],
+          "responses": {
+            "Login (Manager) - 200": {
+              "name": "Login (Manager) - 200",
+              "originalRequest": {
+                "v": "3",
+                "name": "Login (Manager)",
+                "method": "POST",
+                "endpoint": "<<base_url>>/api/auth/login",
+                "headers": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "active": true,
+                    "description": ""
+                  }
+                ],
+                "params": [],
+                "body": {
+                  "contentType": "application/json",
+                  "body": "{\n    \"username\": \"manager1\",\n    \"password\": \"password123\"\n}"
+                },
+                "auth": {
+                  "authType": "none",
+                  "authActive": true
+                },
+                "requestVariables": []
+              },
+              "status": "200 OK",
+              "code": 200,
+              "headers": [
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Cache-Control",
+                  "value": "no-cache, no-store, max-age=0, must-revalidate"
+                },
+                {
+                  "key": "Expires",
+                  "value": "0"
+                },
+                {
+                  "key": "X-Frame-Options",
+                  "value": "DENY"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 21 May 2025 13:34:18 GMT"
+                },
+                {
+                  "key": "X-XSS-Protection",
+                  "value": "0"
+                },
+                {
+                  "key": "X-Content-Type-Options",
+                  "value": "nosniff"
+                },
+                {
+                  "key": "Transfer-Encoding",
+                  "value": "chunked"
+                },
+                {
+                  "key": "Pragma",
+                  "value": "no-cache"
+                }
+              ],
+              "body": "{\"token\":\"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtYW5hZ2VyMSIsImlhdCI6MTc0NzgzNDQ1OCwiZXhwIjoxNzQ3OTIwODU4fQ.ItIATXq7f5Z1Aw5BC-o6xbeIWkvNTrcmFl293cvrs3U\",\"type\":\"Bearer\",\"id\":18,\"username\":\"manager1\",\"email\":\"manager1@example.com\",\"roles\":[\"ROLE_MANAGER\"]}"
+            }
+          }
+        },
+        {
+          "v": "11",
+          "name": "Login (Finance)",
+          "method": "POST",
+          "endpoint": "<<base_url>>/api/auth/login",
+          "params": [],
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json",
+              "active": true,
+              "description": ""
+            }
+          ],
+          "preRequestScript": "",
+          "testScript": "",
+          "auth": {
+            "authType": "inherit",
+            "authActive": true
+          },
+          "body": {
+            "contentType": "application/json",
+            "body": "{\n    \"username\": \"finance1\",\n    \"password\": \"password123\"\n}"
+          },
+          "requestVariables": [],
+          "responses": {
+            "Login (Finance) - 200": {
+              "name": "Login (Finance) - 200",
+              "originalRequest": {
+                "v": "3",
+                "name": "Login (Finance)",
+                "method": "POST",
+                "endpoint": "<<base_url>>/api/auth/login",
+                "headers": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "active": true,
+                    "description": ""
+                  }
+                ],
+                "params": [],
+                "body": {
+                  "contentType": "application/json",
+                  "body": "{\n    \"username\": \"finance1\",\n    \"password\": \"password123\"\n}"
+                },
+                "auth": {
+                  "authType": "none",
+                  "authActive": true
+                },
+                "requestVariables": []
+              },
+              "status": "200 OK",
+              "code": 200,
+              "headers": [
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "X-XSS-Protection",
+                  "value": "0"
+                },
+                {
+                  "key": "Pragma",
+                  "value": "no-cache"
+                },
+                {
+                  "key": "Transfer-Encoding",
+                  "value": "chunked"
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 21 May 2025 13:38:06 GMT"
+                },
+                {
+                  "key": "Cache-Control",
+                  "value": "no-cache, no-store, max-age=0, must-revalidate"
+                },
+                {
+                  "key": "Expires",
+                  "value": "0"
+                },
+                {
+                  "key": "X-Frame-Options",
+                  "value": "DENY"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "X-Content-Type-Options",
+                  "value": "nosniff"
+                }
+              ],
+              "body": "{\"token\":\"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJmaW5hbmNlMSIsImlhdCI6MTc0NzgzNDY4NiwiZXhwIjoxNzQ3OTIxMDg2fQ.7H6X6acwAilhO3rQGhNlINvGaEz2cfVP4oPgY6vHrk0\",\"type\":\"Bearer\",\"id\":19,\"username\":\"finance1\",\"email\":\"finance1@example.com\",\"roles\":[\"ROLE_FINANCE\"]}"
+            }
+          }
+        },
+        {
+          "v": "11",
+          "name": "Test Authentication",
+          "method": "GET",
+          "endpoint": "<<base_url>>/api/auth/test",
+          "params": [],
+          "headers": [
+            {
+              "key": "Authorization",
+              "value": "Bearer <<auth_token>>",
+              "active": true,
+              "description": ""
+            }
+          ],
+          "preRequestScript": "",
+          "testScript": "",
+          "auth": {
+            "authType": "inherit",
+            "authActive": true
+          },
+          "body": {
+            "contentType": null,
+            "body": null
+          },
+          "requestVariables": [],
+          "responses": {}
+        }
+      ],
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "headers": [],
+      "_ref_id": "coll_maxz13fj_158b7f92-834e-493c-bc1b-118f2fb875e5"
+    },
+    {
+      "v": 6,
+      "name": "Bills (Reimbursement Requests)",
+      "folders": [],
+      "requests": [
+        {
+          "v": "11",
+          "name": "Submit New Bill (Employee)",
+          "method": "POST",
+          "endpoint": "<<base_url>>/api/bills",
+          "params": [],
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json",
+              "active": true,
+              "description": ""
+            },
+            {
+              "key": "Authorization",
+              "value": "Bearer <<employee_token>>",
+              "active": true,
+              "description": ""
+            }
+          ],
+          "preRequestScript": "",
+          "testScript": "",
+          "auth": {
+            "authType": "inherit",
+            "authActive": true
+          },
+          "body": {
+            "contentType": "application/json",
+            "body": "{\n    \"title\": \"Business Trip to New York\",\n    \"description\": \"Expenses for flight, hotel, and meals\",\n    \"amount\": 1250.75,\n    \"date\": \"2025-05-15T10:00:00\",\n    \"receiptUrl\": \"https://example.com/receipts/123.pdf\"\n}"
+          },
+          "requestVariables": [],
+          "responses": {
+            "Submit New Bill (Employee) - 200": {
+              "name": "Submit New Bill (Employee) - 200",
+              "originalRequest": {
+                "v": "3",
+                "name": "Submit New Bill (Employee)",
+                "method": "POST",
+                "endpoint": "<<base_url>>/api/bills",
+                "headers": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "active": true,
+                    "description": ""
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer <<employee_token>>",
+                    "active": true,
+                    "description": ""
+                  }
+                ],
+                "params": [],
+                "body": {
+                  "contentType": "application/json",
+                  "body": "{\n    \"title\": \"Business Trip to New York\",\n    \"description\": \"Expenses for flight, hotel, and meals\",\n    \"amount\": 1250.75,\n    \"date\": \"2025-05-15T10:00:00\",\n    \"receiptUrl\": \"https://example.com/receipts/123.pdf\"\n}"
+                },
+                "auth": {
+                  "authType": "none",
+                  "authActive": true
+                },
+                "requestVariables": []
+              },
+              "status": "200 OK",
+              "code": 200,
+              "headers": [
+                {
+                  "key": "Pragma",
+                  "value": "no-cache"
+                },
+                {
+                  "key": "Expires",
+                  "value": "0"
+                },
+                {
+                  "key": "Transfer-Encoding",
+                  "value": "chunked"
+                },
+                {
+                  "key": "X-Frame-Options",
+                  "value": "DENY"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "X-Content-Type-Options",
+                  "value": "nosniff"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "X-XSS-Protection",
+                  "value": "0"
+                },
+                {
+                  "key": "Cache-Control",
+                  "value": "no-cache, no-store, max-age=0, must-revalidate"
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 21 May 2025 13:35:51 GMT"
+                }
+              ],
+              "body": "{\"id\":1,\"title\":\"Business Trip to New York\",\"description\":\"Expenses for flight, hotel, and meals\",\"amount\":1250.75,\"status\":\"PENDING\",\"date\":\"2025-05-15T10:00:00\",\"createdAt\":\"2025-05-21T13:35:49.889581\",\"updatedAt\":\"2025-05-21T13:35:49.889615\",\"receiptUrl\":\"https://example.com/receipts/123.pdf\",\"requester\":{\"id\":16,\"username\":\"employee1\",\"firstName\":\"John\",\"lastName\":\"Doe\",\"email\":\"employee1@example.com\"},\"manager\":{\"id\":18,\"username\":\"manager1\",\"firstName\":\"Jane\",\"lastName\":\"Smith\",\"email\":\"manager1@example.com\"},\"history\":[{\"id\":1,\"status\":\"PENDING\",\"comments\":\"Bill created\",\"timestamp\":\"2025-05-21T13:35:49.895074\",\"username\":\"employee1\"}]}"
+            }
+          }
+        },
+        {
+          "v": "11",
+          "name": "Submit Another Bill (Employee)",
+          "method": "POST",
+          "endpoint": "<<base_url>>/api/bills",
+          "params": [],
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json",
+              "active": true,
+              "description": ""
+            },
+            {
+              "key": "Authorization",
+              "value": "Bearer <<employee_token>>",
+              "active": true,
+              "description": ""
+            }
+          ],
+          "preRequestScript": "",
+          "testScript": "",
+          "auth": {
+            "authType": "inherit",
+            "authActive": true
+          },
+          "body": {
+            "contentType": "application/json",
+            "body": "{\n    \"title\": \"Office Supplies\",\n    \"description\": \"Purchased office supplies for the department\",\n    \"amount\": 89.99,\n    \"date\": \"2025-05-18T14:30:00\",\n    \"receiptUrl\": \"https://example.com/receipts/124.pdf\"\n}"
+          },
+          "requestVariables": [],
+          "responses": {}
+        },
+        {
+          "v": "11",
+          "name": "Get Current User's Bills (Employee)",
+          "method": "GET",
+          "endpoint": "<<base_url>>/api/bills/mine",
+          "params": [],
+          "headers": [
+            {
+              "key": "Authorization",
+              "value": "Bearer <<employee_token>>",
+              "active": true,
+              "description": ""
+            }
+          ],
+          "preRequestScript": "",
+          "testScript": "",
+          "auth": {
+            "authType": "inherit",
+            "authActive": true
+          },
+          "body": {
+            "contentType": null,
+            "body": null
+          },
+          "requestVariables": [],
+          "responses": {}
+        },
+        {
+          "v": "11",
+          "name": "Get Pending Bills (Manager)",
+          "method": "GET",
+          "endpoint": "<<base_url>>/api/bills/pending",
+          "params": [],
+          "headers": [
+            {
+              "key": "Authorization",
+              "value": "Bearer <<manager_token>>",
+              "active": true,
+              "description": ""
+            }
+          ],
+          "preRequestScript": "",
+          "testScript": "",
+          "auth": {
+            "authType": "inherit",
+            "authActive": true
+          },
+          "body": {
+            "contentType": null,
+            "body": null
+          },
+          "requestVariables": [],
+          "responses": {
+            "Get Pending Bills (Manager) - 200": {
+              "name": "Get Pending Bills (Manager) - 200",
+              "originalRequest": {
+                "v": "3",
+                "name": "Get Pending Bills (Manager)",
+                "method": "GET",
+                "endpoint": "<<base_url>>/api/bills/pending",
+                "headers": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer <<manager_token>>",
+                    "active": true,
+                    "description": ""
+                  }
+                ],
+                "params": [],
+                "body": {
+                  "contentType": null,
+                  "body": null
+                },
+                "auth": {
+                  "authType": "none",
+                  "authActive": true
+                },
+                "requestVariables": []
+              },
+              "status": "200 OK",
+              "code": 200,
+              "headers": [
+                {
+                  "key": "Transfer-Encoding",
+                  "value": "chunked"
+                },
+                {
+                  "key": "Expires",
+                  "value": "0"
+                },
+                {
+                  "key": "X-Frame-Options",
+                  "value": "DENY"
+                },
+                {
+                  "key": "Cache-Control",
+                  "value": "no-cache, no-store, max-age=0, must-revalidate"
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 21 May 2025 13:36:44 GMT"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Pragma",
+                  "value": "no-cache"
+                },
+                {
+                  "key": "X-XSS-Protection",
+                  "value": "0"
+                },
+                {
+                  "key": "X-Content-Type-Options",
+                  "value": "nosniff"
+                }
+              ],
+              "body": "[{\"id\":1,\"title\":\"Business Trip to New York\",\"description\":\"Expenses for flight, hotel, and meals\",\"amount\":1250.75,\"status\":\"PENDING\",\"date\":\"2025-05-15T10:00:00\",\"createdAt\":\"2025-05-21T13:35:49.889581\",\"updatedAt\":\"2025-05-21T13:35:49.889615\",\"receiptUrl\":\"https://example.com/receipts/123.pdf\",\"requester\":{\"id\":16,\"username\":\"employee1\",\"firstName\":\"John\",\"lastName\":\"Doe\",\"email\":\"employee1@example.com\"},\"manager\":{\"id\":18,\"username\":\"manager1\",\"firstName\":\"Jane\",\"lastName\":\"Smith\",\"email\":\"manager1@example.com\"},\"history\":[{\"id\":1,\"status\":\"PENDING\",\"comments\":\"Bill created\",\"timestamp\":\"2025-05-21T13:35:49.895074\",\"username\":\"employee1\"}]}]"
+            }
+          }
+        },
+        {
+          "v": "11",
+          "name": "Get Approved Bills (Finance)",
+          "method": "GET",
+          "endpoint": "<<base_url>>/api/bills/approved",
+          "params": [],
+          "headers": [
+            {
+              "key": "Authorization",
+              "value": "Bearer <<finance_token>>",
+              "active": true,
+              "description": ""
+            }
+          ],
+          "preRequestScript": "",
+          "testScript": "",
+          "auth": {
+            "authType": "inherit",
+            "authActive": true
+          },
+          "body": {
+            "contentType": null,
+            "body": null
+          },
+          "requestVariables": [],
+          "responses": {}
+        },
+        {
+          "v": "11",
+          "name": "Get Bill by ID",
+          "method": "GET",
+          "endpoint": "<<base_url>>/api/bills/1",
+          "params": [],
+          "headers": [
+            {
+              "key": "Authorization",
+              "value": "Bearer <<auth_token>>",
+              "active": true,
+              "description": ""
+            }
+          ],
+          "preRequestScript": "",
+          "testScript": "",
+          "auth": {
+            "authType": "inherit",
+            "authActive": true
+          },
+          "body": {
+            "contentType": null,
+            "body": null
+          },
+          "requestVariables": [],
+          "responses": {}
+        },
+        {
+          "v": "11",
+          "name": "Approve Bill (Manager)",
+          "method": "PATCH",
+          "endpoint": "<<base_url>>/api/bills/1/approve",
+          "params": [],
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json",
+              "active": true,
+              "description": ""
+            },
+            {
+              "key": "Authorization",
+              "value": "Bearer <<manager_token>>",
+              "active": true,
+              "description": ""
+            }
+          ],
+          "preRequestScript": "",
+          "testScript": "",
+          "auth": {
+            "authType": "inherit",
+            "authActive": true
+          },
+          "body": {
+            "contentType": "application/json",
+            "body": "{\n    \"comments\": \"Expenses verified and approved\"\n}"
+          },
+          "requestVariables": [],
+          "responses": {
+            "Approve Bill (Manager) - 200": {
+              "name": "Approve Bill (Manager) - 200",
+              "originalRequest": {
+                "v": "3",
+                "name": "Approve Bill (Manager)",
+                "method": "PATCH",
+                "endpoint": "<<base_url>>/api/bills/1/approve",
+                "headers": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "active": true,
+                    "description": ""
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer <<manager_token>>",
+                    "active": true,
+                    "description": ""
+                  }
+                ],
+                "params": [],
+                "body": {
+                  "contentType": "application/json",
+                  "body": "{\n    \"comments\": \"Expenses verified and approved\"\n}"
+                },
+                "auth": {
+                  "authType": "none",
+                  "authActive": true
+                },
+                "requestVariables": []
+              },
+              "status": "200 OK",
+              "code": 200,
+              "headers": [
+                {
+                  "key": "Expires",
+                  "value": "0"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Pragma",
+                  "value": "no-cache"
+                },
+                {
+                  "key": "X-XSS-Protection",
+                  "value": "0"
+                },
+                {
+                  "key": "X-Frame-Options",
+                  "value": "DENY"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 21 May 2025 13:37:25 GMT"
+                },
+                {
+                  "key": "Cache-Control",
+                  "value": "no-cache, no-store, max-age=0, must-revalidate"
+                },
+                {
+                  "key": "Transfer-Encoding",
+                  "value": "chunked"
+                },
+                {
+                  "key": "X-Content-Type-Options",
+                  "value": "nosniff"
+                }
+              ],
+              "body": "{\"id\":1,\"title\":\"Business Trip to New York\",\"description\":\"Expenses for flight, hotel, and meals\",\"amount\":1250.75,\"status\":\"APPROVED\",\"date\":\"2025-05-15T10:00:00\",\"createdAt\":\"2025-05-21T13:35:49.889581\",\"updatedAt\":\"2025-05-21T13:35:49.889615\",\"receiptUrl\":\"https://example.com/receipts/123.pdf\",\"requester\":{\"id\":16,\"username\":\"employee1\",\"firstName\":\"John\",\"lastName\":\"Doe\",\"email\":\"employee1@example.com\"},\"manager\":{\"id\":18,\"username\":\"manager1\",\"firstName\":\"Jane\",\"lastName\":\"Smith\",\"email\":\"manager1@example.com\"},\"history\":[{\"id\":2,\"status\":\"APPROVED\",\"comments\":\"Expenses verified and approved\",\"timestamp\":\"2025-05-21T13:37:23.627242\",\"username\":\"manager1\"},{\"id\":1,\"status\":\"PENDING\",\"comments\":\"Bill created\",\"timestamp\":\"2025-05-21T13:35:49.895074\",\"username\":\"employee1\"}]}"
+            }
+          }
+        },
+        {
+          "v": "11",
+          "name": "Reject Bill (Manager)",
+          "method": "PATCH",
+          "endpoint": "<<base_url>>/api/bills/2/reject",
+          "params": [],
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json",
+              "active": true,
+              "description": ""
+            },
+            {
+              "key": "Authorization",
+              "value": "Bearer <<manager_token>>",
+              "active": true,
+              "description": ""
+            }
+          ],
+          "preRequestScript": "",
+          "testScript": "",
+          "auth": {
+            "authType": "inherit",
+            "authActive": true
+          },
+          "body": {
+            "contentType": "application/json",
+            "body": "{\n    \"comments\": \"Receipts missing. Please resubmit with proper documentation.\"\n}"
+          },
+          "requestVariables": [],
+          "responses": {}
+        },
+        {
+          "v": "11",
+          "name": "Close Bill (Finance)",
+          "method": "PATCH",
+          "endpoint": "<<base_url>>/api/bills/1/close",
+          "params": [],
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json",
+              "active": true,
+              "description": ""
+            },
+            {
+              "key": "Authorization",
+              "value": "Bearer <<finance_token>>",
+              "active": true,
+              "description": ""
+            }
+          ],
+          "preRequestScript": "",
+          "testScript": "",
+          "auth": {
+            "authType": "inherit",
+            "authActive": true
+          },
+          "body": {
+            "contentType": "application/json",
+            "body": "{\n    \"comments\": \"Payment processed on May 21, 2025. Reference #REF12345\"\n}"
+          },
+          "requestVariables": [],
+          "responses": {
+            "Close Bill (Finance) - 200": {
+              "name": "Close Bill (Finance) - 200",
+              "originalRequest": {
+                "v": "3",
+                "name": "Close Bill (Finance)",
+                "method": "PATCH",
+                "endpoint": "<<base_url>>/api/bills/1/close",
+                "headers": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "active": true,
+                    "description": ""
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer <<finance_token>>",
+                    "active": true,
+                    "description": ""
+                  }
+                ],
+                "params": [],
+                "body": {
+                  "contentType": "application/json",
+                  "body": "{\n    \"comments\": \"Payment processed on May 21, 2025. Reference #REF12345\"\n}"
+                },
+                "auth": {
+                  "authType": "none",
+                  "authActive": true
+                },
+                "requestVariables": []
+              },
+              "status": "200 OK",
+              "code": 200,
+              "headers": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Transfer-Encoding",
+                  "value": "chunked"
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 21 May 2025 13:40:00 GMT"
+                },
+                {
+                  "key": "Pragma",
+                  "value": "no-cache"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Expires",
+                  "value": "0"
+                },
+                {
+                  "key": "X-Content-Type-Options",
+                  "value": "nosniff"
+                },
+                {
+                  "key": "Cache-Control",
+                  "value": "no-cache, no-store, max-age=0, must-revalidate"
+                },
+                {
+                  "key": "X-Frame-Options",
+                  "value": "DENY"
+                },
+                {
+                  "key": "X-XSS-Protection",
+                  "value": "0"
+                }
+              ],
+              "body": "{\"id\":1,\"title\":\"Business Trip to New York\",\"description\":\"Expenses for flight, hotel, and meals\",\"amount\":1250.75,\"status\":\"CLOSED\",\"date\":\"2025-05-15T10:00:00\",\"createdAt\":\"2025-05-21T13:35:49.889581\",\"updatedAt\":\"2025-05-21T13:37:25.166156\",\"receiptUrl\":\"https://example.com/receipts/123.pdf\",\"requester\":{\"id\":16,\"username\":\"employee1\",\"firstName\":\"John\",\"lastName\":\"Doe\",\"email\":\"employee1@example.com\"},\"manager\":{\"id\":18,\"username\":\"manager1\",\"firstName\":\"Jane\",\"lastName\":\"Smith\",\"email\":\"manager1@example.com\"},\"history\":[{\"id\":3,\"status\":\"CLOSED\",\"comments\":\"Payment processed on May 21, 2025. Reference #REF12345\",\"timestamp\":\"2025-05-21T13:39:58.810337\",\"username\":\"finance1\"},{\"id\":2,\"status\":\"APPROVED\",\"comments\":\"Expenses verified and approved\",\"timestamp\":\"2025-05-21T13:37:23.627242\",\"username\":\"manager1\"},{\"id\":1,\"status\":\"PENDING\",\"comments\":\"Bill created\",\"timestamp\":\"2025-05-21T13:35:49.895074\",\"username\":\"employee1\"}]}"
+            }
+          }
+        }
+      ],
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "headers": [],
+      "_ref_id": "coll_maxz13fk_0e5b5b10-8c10-4c82-8351-da23366bd96f"
+    },
+    {
+      "v": 6,
+      "name": "Users (Admin Only)",
+      "folders": [],
+      "requests": [
+        {
+          "v": "11",
+          "name": "Get All Users",
+          "method": "GET",
+          "endpoint": "<<base_url>>/api/users",
+          "params": [],
+          "headers": [
+            {
+              "key": "Authorization",
+              "value": "Bearer <<auth_token>>",
+              "active": true,
+              "description": ""
+            }
+          ],
+          "preRequestScript": "",
+          "testScript": "",
+          "auth": {
+            "authType": "inherit",
+            "authActive": true
+          },
+          "body": {
+            "contentType": null,
+            "body": null
+          },
+          "requestVariables": [],
+          "responses": {}
+        },
+        {
+          "v": "11",
+          "name": "Get User by ID",
+          "method": "GET",
+          "endpoint": "<<base_url>>/api/users/<<employee_id>>",
+          "params": [],
+          "headers": [
+            {
+              "key": "Authorization",
+              "value": "Bearer <<auth_token>>",
+              "active": true,
+              "description": ""
+            }
+          ],
+          "preRequestScript": "",
+          "testScript": "",
+          "auth": {
+            "authType": "inherit",
+            "authActive": true
+          },
+          "body": {
+            "contentType": null,
+            "body": null
+          },
+          "requestVariables": [],
+          "responses": {}
+        },
+        {
+          "v": "11",
+          "name": "Create New User (Admin)",
+          "method": "POST",
+          "endpoint": "<<base_url>>/api/users",
+          "params": [],
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json",
+              "active": true,
+              "description": ""
+            },
+            {
+              "key": "Authorization",
+              "value": "Bearer <<auth_token>>",
+              "active": true,
+              "description": ""
+            }
+          ],
+          "preRequestScript": "",
+          "testScript": "",
+          "auth": {
+            "authType": "inherit",
+            "authActive": true
+          },
+          "body": {
+            "contentType": "application/json",
+            "body": "{\n    \"username\": \"newemployee\",\n    \"password\": \"password123\",\n    \"firstName\": \"New\",\n    \"lastName\": \"Employee\",\n    \"email\": \"newemployee@example.com\",\n    \"roles\": [\"employee\"]\n}"
+          },
+          "requestVariables": [],
+          "responses": {}
+        },
+        {
+          "v": "11",
+          "name": "Update User",
+          "method": "PUT",
+          "endpoint": "<<base_url>>/api/users/<<employee_id>>",
+          "params": [],
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json",
+              "active": true,
+              "description": ""
+            },
+            {
+              "key": "Authorization",
+              "value": "Bearer <<auth_token>>",
+              "active": true,
+              "description": ""
+            }
+          ],
+          "preRequestScript": "",
+          "testScript": "",
+          "auth": {
+            "authType": "inherit",
+            "authActive": true
+          },
+          "body": {
+            "contentType": "application/json",
+            "body": "{\n    \"username\": \"employee1\",\n    \"password\": \"updatedPass123\",\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe-Updated\",\n    \"email\": \"employee1@example.com\",\n    \"roles\": [\"employee\"]\n}"
+          },
+          "requestVariables": [],
+          "responses": {}
+        },
+        {
+          "v": "11",
+          "name": "Delete User",
+          "method": "DELETE",
+          "endpoint": "<<base_url>>/api/users/3",
+          "params": [],
+          "headers": [
+            {
+              "key": "Authorization",
+              "value": "Bearer <<auth_token>>",
+              "active": true,
+              "description": ""
+            }
+          ],
+          "preRequestScript": "",
+          "testScript": "",
+          "auth": {
+            "authType": "inherit",
+            "authActive": true
+          },
+          "body": {
+            "contentType": null,
+            "body": null
+          },
+          "requestVariables": [],
+          "responses": {}
+        },
+        {
+          "v": "11",
+          "name": "Assign Manager to Employee",
+          "method": "PATCH",
+          "endpoint": "<<base_url>>/api/users/<<employee_id>>/assign-manager",
+          "params": [],
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json",
+              "active": true,
+              "description": ""
+            },
+            {
+              "key": "Authorization",
+              "value": "Bearer <<auth_token>>",
+              "active": true,
+              "description": ""
+            }
+          ],
+          "preRequestScript": "",
+          "testScript": "",
+          "auth": {
+            "authType": "inherit",
+            "authActive": true
+          },
+          "body": {
+            "contentType": "application/json",
+            "body": "{\n    \"managerId\": \"<<manager_id>>\"\n}"
+          },
+          "requestVariables": [],
+          "responses": {}
+        }
+      ],
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "headers": [],
+      "_ref_id": "coll_maxz13fk_bddf51f9-8b8a-40ac-857f-eaa6f776ba21"
+    }
+  ],
+  "requests": [],
+  "auth": {
+    "authType": "inherit",
+    "authActive": true
+  },
+  "headers": [],
+  "_ref_id": "coll_maxz13fk_d787650b-0b8c-4465-ae1b-2779081bf8fe"
+}

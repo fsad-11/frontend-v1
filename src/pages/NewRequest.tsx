@@ -1,140 +1,128 @@
-"use client"
+"use client";
 
-import type React from "react"
-
-import { useState } from "react"
-import AppShell from "@/components/layout/app-shell"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { useToast } from "@/components/hooks/use-toast"
-import { billTypes, departments, mockEmployees } from "@/lib/utils"
-import { useNavigate } from "react-router-dom"
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import AppShell from "@/components/layout/app-shell";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { AlertCircle, CalendarIcon } from "lucide-react";
+import { useBillManagement } from "@/hooks/use-bill-management";
+import { useUser } from "@/context/UserContext";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { format } from "date-fns";
+import { cn } from "@/lib/utils";
 
 export default function NewRequest() {
-  const { toast } = useToast()
-  const navigate = useNavigate()
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const navigate = useNavigate();
+  const { user } = useUser();
+  const { submitBill, isSubmittingBill, submitBillError } = useBillManagement();
+  const [billDate, setBillDate] = useState<Date | undefined>(new Date());
 
   // Form state
   const [formData, setFormData] = useState({
-    employeeName: "John Doe", // Auto-filled
-    department: "",
-    billType: "",
-    amount: "",
+    title: "",
     description: "",
-    managerName: "",
-    billDocument: null as File | null, // Add field for file upload
-  })
+    amount: "",
+    receiptUrl: "https://example.com/receipts/new.pdf", // In a real app, you'd upload this to a storage service
+  });
 
   // Handle form field changes
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
-  }
-
-  // Handle file upload
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      setFormData((prev) => ({ ...prev, billDocument: e.target.files![0] }))
-    }
-  }
-
-  // Handle select changes
-  const handleSelectChange = (name: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [name]: value }))
-  }
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSubmitting(true)
+    e.preventDefault();
+
+    if (!billDate) {
+      return;
+    }
 
     try {
-      // Mock API call delay
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      await submitBill({
+        title: formData.title,
+        description: formData.description,
+        amount: parseFloat(formData.amount),
+        date: billDate.toISOString(),
+        receiptUrl: formData.receiptUrl,
+      });
 
-      // Show success message
-      toast({
-        title: "Request submitted",
-        description: "Your bill request has been submitted successfully",
-      })
-
-      // Redirect to dashboard
-      navigate("/dashboard")
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      // On successful submission, navigate to dashboard
+      navigate("/dashboard");
     } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Submission failed",
-        description: "Please try again later",
-      })
-    } finally {
-      setIsSubmitting(false)
+      // Error is handled by the useBillManagement hook
+      console.error("Submission error:", error);
     }
-  }
-
-  // Get managers for autocomplete
-  const managers = mockEmployees.filter((emp) => emp.role === "Manager").map((manager) => manager.name)
+  };
 
   return (
     <AppShell>
       <div className="mx-auto max-w-2xl">
-        <h1 className="text-2xl font-bold tracking-tight mb-6">New Bill Request</h1>
+        <h1 className="text-2xl font-bold tracking-tight mb-6">
+          New Reimbursement Request
+        </h1>
 
         <Card>
           <CardHeader>
-            <CardTitle>Bill Request Form</CardTitle>
-            <CardDescription>Fill out the details below to submit a new bill request</CardDescription>
+            <CardTitle>Reimbursement Request Form</CardTitle>
+            <CardDescription>
+              Fill out the details below to submit a new reimbursement request
+            </CardDescription>
           </CardHeader>
+
+          {submitBillError && (
+            <Alert variant="destructive" className="mx-6 mb-4">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>
+                {submitBillError.message ||
+                  "An error occurred while submitting your request. Please try again."}
+              </AlertDescription>
+            </Alert>
+          )}
+
           <form onSubmit={handleSubmit}>
             <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="employeeName">Employee Name</Label>
-                <Input id="employeeName" name="employeeName" value={formData.employeeName} readOnly disabled />
-              </div>
+              {user && (
+                <div className="space-y-2">
+                  <Label>Employee Name</Label>
+                  <Input
+                    value={`${user.username} (${user.email})`}
+                    readOnly
+                    disabled
+                  />
+                </div>
+              )}
 
               <div className="space-y-2">
-                <Label htmlFor="department">Department</Label>
-                <Select
-                  value={formData.department}
-                  onValueChange={(value) => handleSelectChange("department", value)}
+                <Label htmlFor="title">Title</Label>
+                <Input
+                  id="title"
+                  name="title"
+                  placeholder="Brief title for your expense"
+                  value={formData.title}
+                  onChange={handleChange}
                   required
-                >
-                  <SelectTrigger id="department">
-                    <SelectValue placeholder="Select department" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {departments.map((dept) => (
-                      <SelectItem key={dept} value={dept}>
-                        {dept}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="billType">Type of Bill</Label>
-                <Select
-                  value={formData.billType}
-                  onValueChange={(value) => handleSelectChange("billType", value)}
-                  required
-                >
-                  <SelectTrigger id="billType">
-                    <SelectValue placeholder="Select bill type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {billTypes.map((type) => (
-                      <SelectItem key={type} value={type}>
-                        {type}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                />
               </div>
 
               <div className="space-y-2">
@@ -152,6 +140,36 @@ export default function NewRequest() {
               </div>
 
               <div className="space-y-2">
+                <Label htmlFor="date">Expense Date</Label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant={"outline"}
+                      className={cn(
+                        "w-full justify-start text-left font-normal",
+                        !billDate && "text-muted-foreground"
+                      )}
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {billDate ? (
+                        format(billDate, "PPP")
+                      ) : (
+                        <span>Pick a date</span>
+                      )}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0">
+                    <Calendar
+                      mode="single"
+                      selected={billDate}
+                      onSelect={setBillDate}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+              </div>
+
+              <div className="space-y-2">
                 <Label htmlFor="description">Description</Label>
                 <Textarea
                   id="description"
@@ -165,51 +183,36 @@ export default function NewRequest() {
               </div>
 
               <div className="grid w-full max-w-sm items-center gap-1.5">
-                <Label htmlFor="billDocument">Upload Bill Document (PDF)</Label>
+                <Label htmlFor="receiptUrl">Receipt URL</Label>
                 <Input
-                  id="billDocument"
-                  name="billDocument"
-                  type="file"
-                  accept=".pdf"
-                  onChange={handleFileChange}
-                  className="cursor-pointer"
-                  placeholder="Upload your bill or receipt"
+                  id="receiptUrl"
+                  name="receiptUrl"
+                  type="text"
+                  value={formData.receiptUrl}
+                  onChange={handleChange}
+                  placeholder="URL to your receipt image/PDF"
                 />
-                <p className="text-sm text-muted-foreground mt-1">Please upload a PDF file of your bill or receipt</p>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="managerName">Manager Name</Label>
-                <Select
-                  value={formData.managerName}
-                  onValueChange={(value) => handleSelectChange("managerName", value)}
-                  required
-                >
-                  <SelectTrigger id="managerName">
-                    <SelectValue placeholder="Select manager" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {managers.map((manager) => (
-                      <SelectItem key={manager} value={manager}>
-                        {manager}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <p className="text-sm text-muted-foreground mt-1">
+                  In a real app, you would upload the receipt file instead
+                </p>
               </div>
             </CardContent>
 
             <CardFooter className="flex justify-between">
-              <Button type="button" variant="outline" onClick={() => navigate("/dashboard")}>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => navigate("/dashboard")}
+              >
                 Cancel
               </Button>
-              <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? "Submitting..." : "Submit Request"}
+              <Button type="submit" disabled={isSubmittingBill}>
+                {isSubmittingBill ? "Submitting..." : "Submit Request"}
               </Button>
             </CardFooter>
           </form>
         </Card>
       </div>
     </AppShell>
-  )
+  );
 }
