@@ -67,12 +67,12 @@ const navigation = [
     icon: Layout,
     roles: ["admin"],
   },
-  {
-    name: "User Management",
-    href: "/admin",
-    icon: Users,
-    roles: ["admin"],
-  },
+  // {
+  //   name: "User Management",
+  //   href: "/admin",
+  //   icon: Users,
+  //   roles: ["admin"],
+  // },
 ];
 
 export default function AppShell({ children }: { children: ReactNode }) {
