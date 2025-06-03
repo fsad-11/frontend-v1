@@ -21,7 +21,6 @@ import {
   PlusCircle,
   Settings,
   User,
-  Users,
   FileText,
   CreditCard,
   Layout,
@@ -35,7 +34,7 @@ const navigation = [
     name: "Dashboard",
     href: "/dashboard",
     icon: Home,
-    roles: ["employee", "manager", "finance", "admin"],
+    roles: ["employee"],
   },
   {
     name: "New Request",
@@ -67,12 +66,12 @@ const navigation = [
     icon: Layout,
     roles: ["admin"],
   },
-  {
-    name: "User Management",
-    href: "/admin",
-    icon: Users,
-    roles: ["admin"],
-  },
+  // {
+  //   name: "User Management",
+  //   href: "/admin",
+  //   icon: Users,
+  //   roles: ["admin"],
+  // },
 ];
 
 export default function AppShell({ children }: { children: ReactNode }) {

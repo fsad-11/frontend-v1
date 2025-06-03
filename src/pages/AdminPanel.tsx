@@ -60,6 +60,7 @@ export default function AdminPanel() {
     department: "",
     role: "",
     manager: "",
+    password: "",
   });
 
   // Fetch users with useApi hook
@@ -86,6 +87,7 @@ export default function AdminPanel() {
   useEffect(() => {
     fetchUsers();
   }, []);
+  
 
   // Handle form field changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -111,6 +113,7 @@ export default function AdminPanel() {
             .find((role) => role.startsWith("ROLE_"))
             ?.replace("ROLE_", "") || "",
         manager: employee.managerId ? employee.managerId.toString() : "",
+        password: "", // Password is not editable, can be left empty
       });
       setEditingEmployeeId(employeeId);
       setIsEditDialogOpen(true);
@@ -183,10 +186,37 @@ export default function AdminPanel() {
     setIsSubmitting(true);
 
     try {
-      // Implementation would depend on the API structure
-      // This is a placeholder for the API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
 
+       // Parse name into first and last name
+      const nameParts = formData.name.split(" ");
+      const firstName = nameParts[0] || "";
+      const lastName = nameParts.slice(1).join(" ") || "";
+
+      // Prepare role
+      const role = formData.role ? formData.role.toLowerCase() : "";
+
+      await userService.createUser({
+        firstName,
+        lastName,
+        email: formData.email,
+        username: formData.name,
+        roles: [role],
+        password: formData.password,
+        ...(formData.department && { department: formData.department }),
+        ...(formData.manager && { managerId: parseInt(formData.manager) }),
+      });
+
+      console.log("Creating user...", {
+        firstName,
+        lastName,
+        email: formData.email,
+        username: formData.name,
+        roles: [role],
+        password: formData.password,
+        ...(formData.department && { department: formData.department }),
+        ...(formData.manager && { managerId: parseInt(formData.manager) }),
+      })
+      
       // Show success message
       toast({
         title: "Employee created",
@@ -200,6 +230,7 @@ export default function AdminPanel() {
         department: "",
         role: "",
         manager: "",
+        password: "",
       });
 
       // Refresh user list
@@ -246,11 +277,10 @@ export default function AdminPanel() {
 
   // Get manager name by ID
   const getManagerName = (managerId?: number) => {
+    console.log("Getting manager name for ID:", managerId);
     if (!managerId) return "N/A";
-    const manager = users?.find((user) => user.id === managerId);
-    return manager
-      ? `${manager.firstName || ""} ${manager.lastName || ""}`.trim()
-      : "N/A";
+    const manager = managers?.find((user) => user.id === managerId);
+    return manager ? manager?.name : "N/A";
   };
 
   // Show loading state
@@ -329,24 +359,24 @@ export default function AdminPanel() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {filteredUsers.map((user) => (
+                      {filteredUsers.map((user: any) => (
                         <TableRow key={user.id}>
                           <TableCell className="font-medium">{`${user.firstName || ""} ${user.lastName || ""}`}</TableCell>
                           <TableCell>{user.email || "N/A"}</TableCell>
                           <TableCell>{user.department || "N/A"}</TableCell>
-                          <TableCell>
+                          <TableCell className="capitalize">
                             {user.roles
-                              .map((role) => formatRole(role))
+                              .map((role: any) => formatRole(role))
                               .join(", ")}
                           </TableCell>
                           <TableCell>
-                            {getManagerName(user.managerId)}
+                            {getManagerName(user.manager?.id)}
                           </TableCell>
                           <TableCell>
                             <Button
                               size="icon"
                               variant="ghost"
-                              onClick={() => handleEditEmployee(user.id)}
+                              onClick={() => handleEditEmployee(user.id as number)}
                             >
                               <Pencil className="h-4 w-4" />
                               <span className="sr-only">Edit</span>
@@ -363,7 +393,7 @@ export default function AdminPanel() {
 
           <TabsContent value="create" className="mt-6">
             <Card>
-              <form onSubmit={handleCreateEmployee}>
+              <form>
                 <CardHeader>
                   <CardTitle>Create Employee</CardTitle>
                   <CardDescription>
@@ -393,6 +423,19 @@ export default function AdminPanel() {
                         type="email"
                         placeholder="john.doe@example.com"
                         value={formData.email}
+                        onChange={handleChange}
+                        required
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="password">Password</Label>
+                      <Input
+                        id="password"
+                        name="password"
+                        type="password"
+                        placeholder="••••••••"
+                        value={formData.password}
                         onChange={handleChange}
                         required
                       />
@@ -458,7 +501,7 @@ export default function AdminPanel() {
                           {managers.map((manager) => (
                             <SelectItem
                               key={manager.id}
-                              value={manager.id.toString()}
+                              value={manager.id?.toString() as string}
                             >
                               {manager.name}
                             </SelectItem>
@@ -480,13 +523,19 @@ export default function AdminPanel() {
                         department: "",
                         role: "",
                         manager: "",
+                        password: "",
                       })
                     }
                   >
                     Cancel
                   </Button>
-                  <Button type="submit" disabled={isSubmitting}>
-                    {isSubmitting ? "Creating..." : "Create Employee"}
+                  <Button type="submit" disabled={isSubmitting} onClick={handleCreateEmployee}>
+                    {isSubmitting ? 
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Creating...
+                    </>
+                     : "Create Employee"}
                   </Button>
                 </CardFooter>
               </form>
@@ -604,7 +653,7 @@ export default function AdminPanel() {
                       {managers.map((manager) => (
                         <SelectItem
                           key={manager.id}
-                          value={manager.id.toString()}
+                          value={manager.id?.toString() as string}
                         >
                           {manager.name}
                         </SelectItem>
