@@ -31,7 +31,7 @@ export default function Dashboard() {
     if (!isAdmin) {
       fetchMyBills();
     }
-  }, [fetchMyBills, isAdmin]);
+  }, []);
 
   // Filter bills based on search
   const filteredBills = myBills?.filter(
