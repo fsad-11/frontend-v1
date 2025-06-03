@@ -110,7 +110,7 @@ export default function AppShell({ children }: { children: ReactNode }) {
         <SheetContent side="left" className="w-64 p-0">
           <div className="flex flex-col h-full">
             <div className="flex h-14 items-center border-b px-4">
-              <span className="font-bold text-lg">Bill System</span>
+              <span className="font-bold text-lg">Reimbursement System</span>
             </div>
             <nav className="flex-1 overflow-auto py-4">
               <ul className="space-y-1 px-2">
@@ -151,7 +151,7 @@ export default function AppShell({ children }: { children: ReactNode }) {
       <div className="hidden md:flex md:w-64 md:flex-col">
         <div className="flex flex-col h-full border-r bg-white">
           <div className="flex h-14 items-center border-b px-4">
-            <span className="font-bold text-lg">Bill System</span>
+            <span className="font-bold text-lg">Reimbursement System</span>
           </div>
           <nav className="flex-1 overflow-auto py-4">
             <ul className="space-y-1 px-2">
