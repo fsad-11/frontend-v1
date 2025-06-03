@@ -2,13 +2,14 @@ import { apiRequest } from "./api-client";
 
 // Types
 export interface UserDetails {
-  id: number;
+  id?: number;
   username: string;
   firstName: string;
   lastName: string;
   email: string;
   roles: string[];
   department?: string;
+  password?: string; // Optional for updates
   managerId?: number;
 }
 
@@ -55,6 +56,17 @@ export const userService = {
     return apiRequest<void>({
       method: "DELETE",
       url: `/api/users/${id}`,
+    });
+  },
+
+  /**
+   * Create User (admin only)
+   */
+  createUser: async (data: UserDetails): Promise<UserDetails> => {
+    return apiRequest<UserDetails>({
+      method: "POST",
+      url: `/api/users`,
+      data,
     });
   },
 };
