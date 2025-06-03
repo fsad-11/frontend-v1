@@ -85,6 +85,7 @@ export default function AdminPanel() {
   useEffect(() => {
     fetchUsers();
   }, []);
+  
 
   // Handle form field changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -274,11 +275,10 @@ export default function AdminPanel() {
 
   // Get manager name by ID
   const getManagerName = (managerId?: number) => {
+    console.log("Getting manager name for ID:", managerId);
     if (!managerId) return "N/A";
-    const manager = users?.find((user) => user.id === managerId);
-    return manager
-      ? `${manager.firstName || ""} ${manager.lastName || ""}`.trim()
-      : "N/A";
+    const manager = managers?.find((user) => user.id === managerId);
+    return manager ? manager?.name : "N/A";
   };
 
   // Show loading state
@@ -357,18 +357,18 @@ export default function AdminPanel() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {filteredUsers.map((user) => (
+                      {filteredUsers.map((user: any) => (
                         <TableRow key={user.id}>
                           <TableCell className="font-medium">{`${user.firstName || ""} ${user.lastName || ""}`}</TableCell>
                           <TableCell>{user.email || "N/A"}</TableCell>
                           <TableCell>{user.department || "N/A"}</TableCell>
-                          <TableCell>
+                          <TableCell className="capitalize">
                             {user.roles
-                              .map((role) => formatRole(role))
+                              .map((role: any) => formatRole(role))
                               .join(", ")}
                           </TableCell>
                           <TableCell>
-                            {getManagerName(user.managerId)}
+                            {getManagerName(user.manager?.id)}
                           </TableCell>
                           <TableCell>
                             <Button

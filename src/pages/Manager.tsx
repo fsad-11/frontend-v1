@@ -75,7 +75,7 @@ export default function Manager() {
   }, []);
 
   // Filter based on search
-  const filteredBills = allBills?.filter(
+  const filteredBills = pendingBills?.filter(
     (bill) =>
       bill.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       bill.description.toLowerCase().includes(searchQuery.toLowerCase()) ||

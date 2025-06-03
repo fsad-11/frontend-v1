@@ -21,7 +21,6 @@ import {
   PlusCircle,
   Settings,
   User,
-  Users,
   FileText,
   CreditCard,
   Layout,
