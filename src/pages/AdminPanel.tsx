@@ -73,12 +73,14 @@ export default function AdminPanel() {
   // Get managers from user list
   const managers = users
     ? users
-        .filter((user) => user.roles.includes("ROLE_MANAGER"))
+        .filter((user) => user.roles.includes("manager"))
         .map((manager) => ({
           id: manager.id,
           name: `${manager.firstName || ""} ${manager.lastName || ""}`.trim(),
         }))
     : [];
+   console.log(users)
+
 
   // Fetch users on component mount
   useEffect(() => {
