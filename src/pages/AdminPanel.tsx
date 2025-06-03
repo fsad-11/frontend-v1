@@ -201,8 +201,19 @@ export default function AdminPanel() {
         password: formData.password,
         ...(formData.department && { department: formData.department }),
         ...(formData.manager && { managerId: parseInt(formData.manager) }),
-
       });
+
+      console.log("Creating user...", {
+        firstName,
+        lastName,
+        email: formData.email,
+        username: formData.name,
+        roles: [role],
+        password: formData.password,
+        ...(formData.department && { department: formData.department }),
+        ...(formData.manager && { managerId: parseInt(formData.manager) }),
+      })
+      
       // Show success message
       toast({
         title: "Employee created",
@@ -380,7 +391,7 @@ export default function AdminPanel() {
 
           <TabsContent value="create" className="mt-6">
             <Card>
-              <form onSubmit={handleCreateEmployee}>
+              <form>
                 <CardHeader>
                   <CardTitle>Create Employee</CardTitle>
                   <CardDescription>
@@ -516,9 +527,13 @@ export default function AdminPanel() {
                   >
                     Cancel
                   </Button>
-                  <Button type="submit" disabled={isSubmitting}>
-                    <Loader2 className={`mr-2 h-4 w-4 ${isSubmitting ? "animate-spin" : ""}`} />
-                    {isSubmitting ? "Creating..." : "Create Employee"}
+                  <Button type="submit" disabled={isSubmitting} onClick={handleCreateEmployee}>
+                    {isSubmitting ? 
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Creating...
+                    </>
+                     : "Create Employee"}
                   </Button>
                 </CardFooter>
               </form>

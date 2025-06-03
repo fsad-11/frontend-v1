@@ -60,7 +60,7 @@ export default function Manager() {
   // Fetch pending bills on component mount
   useEffect(() => {
     fetchPendingBills();
-  }, [fetchPendingBills]);
+  }, []);
 
   // Filter based on search
   const filteredBills = pendingBills?.filter(

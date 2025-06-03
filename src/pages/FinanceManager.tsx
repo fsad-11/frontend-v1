@@ -54,7 +54,7 @@ export default function FinancePage() {
   // Fetch approved bills on component mount
   useEffect(() => {
     fetchApprovedBills();
-  }, [fetchApprovedBills]);
+  }, []);
 
   // Filter bills based on status
   const approvedOnly =
