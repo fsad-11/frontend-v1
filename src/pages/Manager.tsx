@@ -33,6 +33,7 @@ import { Bill } from "@/services/bill-service";
 
 export default function Manager() {
   const [searchQuery, setSearchQuery] = useState("");
+  const [allBills, setAllBills] = useState<Bill[]>([]);
   const {
     pendingBills,
     fetchPendingBills,
@@ -42,6 +43,9 @@ export default function Manager() {
     rejectBill,
     isApprovingBill,
     isRejectingBill,
+    myBills,
+    approvedBills,
+    fetchMyBills
   } = useBillManagement();
 
   // State for approval/rejection dialog
@@ -60,10 +64,18 @@ export default function Manager() {
   // Fetch pending bills on component mount
   useEffect(() => {
     fetchPendingBills();
+    fetchMyBills();
+    // Combine all bills for search
+    const combinedBills = [
+      ...(pendingBills || []),
+      ...(myBills || []),
+      ...(approvedBills || []),
+    ];
+    setAllBills(combinedBills);
   }, []);
 
   // Filter based on search
-  const filteredBills = pendingBills?.filter(
+  const filteredBills = allBills?.filter(
     (bill) =>
       bill.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       bill.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -241,11 +253,91 @@ export default function Manager() {
           </TabsContent>
 
           <TabsContent value="all" className="mt-4">
-            <div className="text-center py-12">
+          {allBills.length > 0 ? (
+              <div className="grid gap-4">
+                {allBills.map((bill) => (
+                  <Card key={bill.id}>
+                    <CardHeader className="pb-2">
+                      {/* <div className="flex justify-between items-center">
+                        <CardTitle className="text-lg">{bill.title}</CardTitle>
+                        <Badge variant="outline">Pending</Badge>
+                      </div> */}
+                      <CardDescription>
+                        Submitted: {formatDate(bill.createdAt)}
+                      </CardDescription>
+                    </CardHeader>
+
+                    <CardContent>
+                      <dl className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div>
+                          <dt className="text-sm font-medium text-muted-foreground">
+                            Amount
+                          </dt>
+                          <dd className="text-sm font-semibold">
+                            {formatAmount(bill.amount)}
+                          </dd>
+                        </div>
+
+                        <div>
+                          <dt className="text-sm font-medium text-muted-foreground">
+                            Date
+                          </dt>
+                          <dd className="text-sm font-semibold">
+                            {formatDate(bill.date)}
+                          </dd>
+                        </div>
+
+                        <div>
+                          <dt className="text-sm font-medium text-muted-foreground">
+                            Employee
+                          </dt>
+                          <dd className="text-sm font-semibold">
+                            {bill.requester.firstName} {bill.requester.lastName}
+                          </dd>
+                        </div>
+                      </dl>
+
+                      <div className="mt-4">
+                        <span className="text-sm font-medium text-muted-foreground">
+                          Description:
+                        </span>
+                        <p className="text-sm mt-1">{bill.description}</p>
+                      </div>
+                    </CardContent>
+
+                    <CardFooter className="flex justify-between pt-0">
+                      <Link to={`/request/${bill.id}`}>
+                        <Button variant="outline">View Details</Button>
+                      </Link>
+                      <div className="flex gap-2">
+                        <Button
+                          variant="outline"
+                          className="bg-red-50 hover:bg-red-100 text-red-600"
+                          onClick={() => openActionDialog(bill, "reject")}
+                        >
+                          <X className="mr-2 h-4 w-4" />
+                          Reject
+                        </Button>
+                        <Button
+                          variant="outline"
+                          className="bg-green-50 hover:bg-green-100 text-green-600"
+                          onClick={() => openActionDialog(bill, "approve")}
+                        >
+                          <Check className="mr-2 h-4 w-4" />
+                          Approve
+                        </Button>
+                      </div>
+                    </CardFooter>
+                  </Card>
+                ))}
+              </div>
+          ) : 
+           (<div className="text-center py-12">
               <p className="text-muted-foreground">
-                All requests history would appear here
+                No requests found
               </p>
-            </div>
+            </div>)
+          }
           </TabsContent>
         </Tabs>
       </div>

@@ -35,7 +35,7 @@ const navigation = [
     name: "Dashboard",
     href: "/dashboard",
     icon: Home,
-    roles: ["employee", "manager", "finance", "admin"],
+    roles: ["employee"],
   },
   {
     name: "New Request",
