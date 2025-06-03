@@ -192,9 +192,9 @@ export default function NewRequest() {
                   onChange={handleChange}
                   placeholder="URL to your receipt image/PDF"
                 />
-                <p className="text-sm text-muted-foreground mt-1">
+                {/* <p className="text-sm text-muted-foreground mt-1">
                   In a real app, you would upload the receipt file instead
-                </p>
+                </p> */}
               </div>
             </CardContent>
 
